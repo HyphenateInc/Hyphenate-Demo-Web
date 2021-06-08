@@ -10,6 +10,8 @@ const { Types, Creators } = createActions({
     updateGroupInfo: ['info'],
     getGroupInfo: ['groupInfo'],
     updateGroupMemberInfo: ['groupId', 'memberInfo'],
+    changeMemberRole: ['groupId', 'userId', 'role'],
+    deleteMember: ['groupId', 'userId'],
     getGroups: () => {
         return (dispatch, getState) => {
             dispatch(CommonActions.setLoading(true))
@@ -157,6 +159,22 @@ export const getGroupInfo = (state, { groupInfo }) => {
 export const updateGroupMemberInfo = (state, { groupId, memberInfo }) => {
     return state.setIn(['byId', groupId, 'memberInfo'], memberInfo)
 }
+export const changeMemberRole = (state, { groupId, userId, role }) => {
+    const affiliations = state.getIn(['byId', groupId, 'info', 'affiliations']).asMutable({ deep: true })
+    affiliations.forEach((item) => {
+        if (item.id === userId) {
+            item.role = role
+        }
+    })
+    return state.setIn(['byId', groupId, 'info', 'affiliations'], affiliations)
+}
+export const deleteMember = (state, { groupId, userId }) => {
+    let affiliations = state.getIn(['byId', groupId, 'info', 'affiliations']).asMutable({ deep: true })
+    affiliations = affiliations.filter((item) => {
+        return item.id !== userId
+    })
+    return state.setIn(['byId', groupId, 'info', 'affiliations'], affiliations)
+}
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
@@ -171,7 +189,9 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.UPDATE_GROUP_INFO]: updateGroupInfo,
     [Types.DISSOLVE_GROUP]: dissolveGroup,
     [Types.GET_GROUP_INFO]: getGroupInfo,
-    [Types.UPDATE_GROUP_MEMBER_INFO]: updateGroupMemberInfo
+    [Types.UPDATE_GROUP_MEMBER_INFO]: updateGroupMemberInfo,
+    [Types.CHANGE_MEMBER_ROLE]: changeMemberRole,
+    [Types.DELETE_MEMBER]: deleteMember
 })
 
 

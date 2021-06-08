@@ -8,10 +8,13 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux'
+import { useParams } from "react-router-dom";
 import { renderTime } from '@/utils'
 import groupIcon from '@/assets/images/group@2x.png'
 import chatRoomIcon from '@/assets/images/chatroom@2x.png'
 import noticeIcon from '@/assets/images/notice@2x.png'
+import GroupMemberActions from '@/redux/groupMember'
+import ChatRoomActions from '@/redux/chatRoom'
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -86,11 +89,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SessionList(props) {
     const classes = useStyles();
+    const dispatch = useDispatch()
     const sessionList = useSelector(state => state.session.sessionList) || []
     const message = useSelector(state => state.message)
     const { unread } = message
     const currentSession = useSelector(state => state.session.currentSession)
+    const groupMember = useSelector(state => state.group.groupMember)
     let currentSessionIndex = 0
+    let { chatType, to } = useParams()
 
     // dealwith notice unread num 
     const notices = useSelector(state => state.notice.notices) || []
@@ -101,8 +107,6 @@ export default function SessionList(props) {
         }
     })
     console.log('******&&&&&& sessionList', sessionList)
-
-
 
     const renderSessionList = sessionList.asMutable({ deep: true })
         .map((session) => {
@@ -143,8 +147,23 @@ export default function SessionList(props) {
     });
 
     const handleListItemClick = (event, index, session) => {
+        const { sessionId, sessionType } = session
         if (currentSessionIndex !== index) {
             props.onClickItem(session)
+            if (chatType === 'chatRoom') {
+                // quit pre room
+                dispatch(ChatRoomActions.quitChatRoom(to))
+            }
+            if (sessionType === 'groupChat' && !groupMember[sessionId]) {
+                dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: sessionId }))
+                dispatch(GroupMemberActions.getMutedAsync(sessionId))
+                // dispatch(GroupMemberActions.getGroupAdminAsync(sessionId))
+            }
+            else if (sessionType === 'chatRoom') {
+                // join room
+                dispatch(ChatRoomActions.joinChatRoom(sessionId))
+            }
+
         }
     };
 

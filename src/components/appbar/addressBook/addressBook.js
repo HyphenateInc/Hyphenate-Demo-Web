@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => {
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
-            padding: 0
+            padding: 0,
+            overflowX: 'hidden'
         },
         listItem: {
             height: theme.spacing(14),

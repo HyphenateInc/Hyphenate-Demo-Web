@@ -67,6 +67,7 @@ export default function UserInfo({ open, onClose }) {
     };
     const handleClickSave = () => {
         dispatch(LoginActions.updateOwnInfo('nickname', inputValue))
+        setIsEdit(true)
     }
     function renderContent() {
         return (

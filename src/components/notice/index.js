@@ -44,6 +44,13 @@ const useStyles = makeStyles((theme) => ({
         '& button': {
             margin: '0 5px'
         }
+    },
+    noData: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        color: 'rgba(0,0,0,.15)',
+        fontSize: '28px'
     }
 }))
 function Notice() {
@@ -67,7 +74,7 @@ function Notice() {
     return (
         <div className={classes.root}>
             <div>
-                {notices.map((msg, index) => {
+                {notices.length ? notices.map((msg, index) => {
                     const noticeType = msg.type === 'joinGroupNotifications' ? 'groupRequest' : 'friendRequest'
                     return <div className={classes.itemBox} key={msg.from + index}>
                         <div className={classes.header}>
@@ -101,7 +108,7 @@ function Notice() {
                             </Box>
                         </div>
                     </div>
-                })}
+                }) : <div className={classes.noData}>no data</div>}
             </div>
         </div>
     )
