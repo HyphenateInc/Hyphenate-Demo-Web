@@ -5,7 +5,8 @@ import { Box, TextField, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useStore } from 'react-redux'
-import RosterActions from '@/redux/roster'
+import { useSelector } from 'react-redux'
+import GroupMemberActions from '@/redux/groupMember'
 import { message } from '@/components/common/Alert'
 const useStyles = makeStyles((theme) => {
     return ({
@@ -33,12 +34,13 @@ export default function InviteDialog({ open, onClose }) {
     const classes = useStyles();
     const dispatch = useDispatch()
     const [inputValue, setInputValue] = useState('')
+    const currentGroup = useSelector(state => state.session.currentSession)
     const [error, setError] = useState(null)
-    const addFriend = () => {
+    const handleClickInvite = () => {
         if (!inputValue) {
             return setError(true)
         }
-        dispatch(RosterActions.addContact(inputValue))
+        dispatch(GroupMemberActions.inviteToGroupAsync(currentGroup, inputValue))
         message.success(i18next.t('Successfully send the application'))
         setInputValue('')
         setError(null)
@@ -65,7 +67,7 @@ export default function InviteDialog({ open, onClose }) {
                     value={inputValue}
                     onChange={handleChange} />
                 <Button
-                    onClick={addFriend} variant="contained" color="primary" className={classes.button}>
+                    onClick={handleClickInvite} variant="contained" color="primary" className={classes.button}>
                     {i18next.t('Send Invite')}
                 </Button>
             </Box>

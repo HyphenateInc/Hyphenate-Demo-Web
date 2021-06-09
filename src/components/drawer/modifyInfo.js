@@ -5,8 +5,9 @@ import { Box, TextField, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useStore } from 'react-redux'
-import RosterActions from '@/redux/roster'
+import GroupActions from '@/redux/group'
 import { message } from '@/components/common/Alert'
+import { useSelector } from 'react-redux'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
@@ -34,12 +35,13 @@ export default function ModifyInfoDialog({ open, onClose }) {
     const dispatch = useDispatch()
     const [inputValue, setInputValue] = useState('')
     const [error, setError] = useState(null)
-    const addFriend = () => {
+    const currentGroup = useSelector(state => state.session.currentSession)
+    const handleClickSubmit = () => {
         if (!inputValue) {
             return setError(true)
         }
-        dispatch(RosterActions.addContact(inputValue))
-        message.success(i18next.t('Successfully send the application'))
+        dispatch(GroupActions.updateGroupInfoAsync(currentGroup, inputValue))
+        message.success(i18next.t(' Submit Success'))
         setInputValue('')
         setError(null)
         onClose()
@@ -65,7 +67,7 @@ export default function ModifyInfoDialog({ open, onClose }) {
                     value={inputValue}
                     onChange={handleChange} />
                 <Button
-                    onClick={addFriend} variant="contained" color="primary" className={classes.button}>
+                    onClick={handleClickSubmit} variant="contained" color="primary" className={classes.button}>
                     {i18next.t('Submit')}
                 </Button>
             </Box>

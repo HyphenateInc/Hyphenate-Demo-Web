@@ -40,7 +40,7 @@ function BaseDrawer({ open }) {
         >
             <div className={classes.drawerContent}>
                 {chatType === 'singleChat' && <SingleChatInfo />}
-                {chatType === 'groupChat' && <GroupChatInfo />}
+                {chatType === 'groupChat' && <GroupChatInfo onDissolve={() => { handleClose() }} />}
             </div>
         </Drawer>
     )

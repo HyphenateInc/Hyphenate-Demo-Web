@@ -55,7 +55,7 @@ const { Types, Creators } = createActions({
                 },
                 error: e => {
                     if (e.type === 17) {
-                        message.error('你没有权限做此操作');
+                        message.error('no authorization');
                     }
                 }
             })

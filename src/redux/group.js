@@ -3,7 +3,7 @@ import Immutable from 'seamless-immutable'
 import _ from 'lodash'
 import WebIM from '@/common/WebIM';
 import CommonActions from '@/redux/common'
-
+import { message } from '@/components/common/Alert'
 const { Types, Creators } = createActions({
     updateGroup: ['groups'],
     dissolveGroup: ['group'],
@@ -34,6 +34,9 @@ const { Types, Creators } = createActions({
                     dispatch(Creators.dissolveGroup({ groupId, groupName }))
                 },
                 error: e => {
+                    if (e.type === 17) {
+                        message.error('group owner permission is required');
+                    }
                 }
             })
         }
