@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import { IconButton, Icon, InputBase } from '@material-ui/core';
@@ -27,6 +27,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import UserInfoDialog from '@/components/appbar/userInfo/index'
 import UserSettingDialog from '@/components/appbar/userSetting/index'
 import WebIM from '@/common/WebIM';
+import SearchInput from '@/components/common/searchInput'
+import _ from 'lodash'
+import AppDB from '@/utils/AppDB';
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
@@ -139,7 +142,9 @@ function ProminentAppBar(props) {
     const [showAddGroup, setShowAddGroup] = useState(false) // show AddGroupDialog
     const [showUserInfo, setShowUserInfo] = useState(false) // show UserInfoDialog
     const [showUserSetting, setShowUserSetting] = useState(false) // show UserSetting
+    const [showSearch, setShowSearch] = useState(false)
     const ownInfo = useSelector(state => state.login.info)
+    const messages = useSelector(state => state.message?.[chatType]?.[to])
     const handleClickAdd = (e) => {
         setAddEl(e.currentTarget)
     }
@@ -332,6 +337,26 @@ function ProminentAppBar(props) {
         dispatch(MessageActions.clearMessage(chatType, to))
         dispatch(SessionActions.deleteSession(to))
     }
+
+    const handleSearchChange = _.debounce((e) => {
+        if (e.target.value === '' || chatType === 'notice') {
+            return
+        }
+        AppDB.fetchMessage(to, chatType, 0, 50).then((res) => {
+            let searchMessages = res.filter(message => {
+                return message.body?.msg?.indexOf(e.target.value) > -1
+            })
+            dispatch(MessageActions.updateMessages(chatType, to, searchMessages))
+        })
+    }, 300, { trailing: true })
+    const handleSearchBlur = (e) => {
+        if (e.target.value === '') {
+            AppDB.fetchMessage(to, chatType, 0, 20).then((res) => {
+                dispatch(MessageActions.updateMessages(chatType, to, res))
+            })
+            setShowSearch(false)
+        }
+    }
     return (
         <div className={classes.root}>
             <Box position="static" className={classes.leftBar}
@@ -361,7 +386,14 @@ function ProminentAppBar(props) {
                     {to}
                 </Typography>
                 <Toolbar className={classes.toolbar}>
-                    <IconButton className="iconfont icon-sousuo icon"></IconButton>
+                    <SearchInput
+                        style={{ display: showSearch ? 'flex' : 'none' }}
+                        onChange={handleSearchChange}
+                        onBlur={handleSearchBlur}
+                    />
+
+                    <IconButton style={{ display: !showSearch ? 'block' : 'none' }}
+                        onClick={() => { setShowSearch(true) }} className="iconfont icon-sousuo icon"></IconButton>
                     {/* <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <IconButton className="iconfont icon-sousuo icon"></IconButton>

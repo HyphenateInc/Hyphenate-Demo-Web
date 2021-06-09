@@ -29,6 +29,7 @@ const { Types, Creators } = createActions({
     deleteMessage: ['msgId'],
     updateMessageStatus: ['message', 'status'],
     clearUnread: ["chatType", "sessionId"],
+    updateMessages: ["chatType", "sessionId", "messages"],
     // -async-
     sendTxtMessage: (to, chatType, message = {}) => {
         return (dispatch, getState) => {
@@ -306,6 +307,10 @@ export const clearMessage = (state, { chatType, id }) => {
     return chatType ? state.setIn([chatType, id], []) : state
 }
 
+export const updateMessages = (state, { chatType, sessionId, messages }) => {
+    return state.setIn([chatType, sessionId], messages)
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const messageReducer = createReducer(INITIAL_STATE, {
@@ -314,6 +319,7 @@ export const messageReducer = createReducer(INITIAL_STATE, {
     [Types.CLEAR_UNREAD]: clearUnread,
     [Types.FETCH_MESSAGE]: fetchMessage,
     [Types.CLEAR_MESSAGE]: clearMessage,
+    [Types.UPDATE_MESSAGES]: updateMessages
 })
 
 export default Creators

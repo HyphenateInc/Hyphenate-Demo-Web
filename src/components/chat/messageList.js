@@ -89,25 +89,25 @@ function MessageList({ messageList }) {
                     </div>
                 </div>
                 <ul className="pulldown-list">
-                    {messageList.map((msg) => {
+                    {messageList.length ? messageList.map((msg, index) => {
                         if (msg.body.type === 'txt') {
-                            return <TextMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <TextMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'file') {
-                            return <FileMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <FileMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'img') {
-                            return <ImgMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <ImgMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'audio') {
-                            <AudioMessage message={msg} key={msg.id} />
+                            <AudioMessage message={msg} key={msg.id + index} />
                         }
                         else if (msg.body.type === 'recall') {
-                            return <RetractedMessage message={msg} key={msg.id} />
+                            return <RetractedMessage message={msg} key={msg.id + index} />
                         } else {
                             return null
                         }
-                    })}
+                    }) : null}
                 </ul>
             </div>
         </div>

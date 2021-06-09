@@ -9,6 +9,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux'
 import { message } from '@/components/common/Alert'
 import GroupActions from '@/redux/group'
+import SearchInput from '@/components/common/searchInput'
 const BaseSwitch = withStyles({
     switchBase: {
         color: '#00ba6ed9',
@@ -73,58 +74,6 @@ const useStyles = makeStyles((theme) => {
             overflow: 'hidden',
         },
 
-        searchBox: {
-            boxSizing: 'border-box',
-            margin: '0 16px',
-            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-            height: '56px',
-            display: 'flex',
-            alignItems: 'center'
-        },
-        search: {
-            flex: 1,
-            display: 'flex',
-            height: '30px',
-            position: 'relative',
-            borderRadius: '15px',
-            backgroundColor: fade("#111", 0.15),
-            '&:hover': {
-                backgroundColor: fade('#111', 0.25),
-            },
-            marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(1),
-                width: 'auto',
-            },
-        },
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        inputRoot: {
-            color: 'inherit',
-            width: '100%'
-        },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
-            paddingLeft: `30px`,
-            paddingRight: '5px',
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '100%',
-                '&:focus': {
-                    width: '100%',
-                },
-            },
-        },
         'icon-green': {
             color: '#00BA6E',
         },
@@ -190,6 +139,7 @@ function CreateGroup(props) {
 
     const [renderList, setRenderList] = useState([...friends])
     const handleSearchChange = _.debounce((e) => {
+        console.log('----friends-----', friends)
         if (e.target.value === '') {
             return setRenderList([...friends])
         }
@@ -221,23 +171,7 @@ function CreateGroup(props) {
     function renderContent() {
         return (
             <>
-                <div className={classes.searchBox}>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <Icon className="iconfont icon-sousuo icon"></Icon>
-                        </div>
-                        <InputBase
-                            placeholder="search"
-                            onChange={handleSearchChange}
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
-                </div>
-
+                <SearchInput onChange={handleSearchChange} />
 
                 <List dense className={classes.root}>
                     {renderList.map((userId, index) => {

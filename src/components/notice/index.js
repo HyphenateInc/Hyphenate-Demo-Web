@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         display: 'flex',
         color: 'rgba(0,0,0,.15)',
-        fontSize: '28px'
+        fontSize: '28px',
+        height: '80vh'
     }
 }))
 function Notice() {
