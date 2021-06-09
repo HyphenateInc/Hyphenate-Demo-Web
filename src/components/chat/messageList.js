@@ -100,7 +100,7 @@ function MessageList({ messageList }) {
                             return <ImgMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'audio') {
-                            <AudioMessage message={msg} key={msg.id + index} />
+                            return <AudioMessage message={msg} key={msg.id + index} />
                         }
                         else if (msg.body.type === 'recall') {
                             return <RetractedMessage message={msg} key={msg.id + index} />

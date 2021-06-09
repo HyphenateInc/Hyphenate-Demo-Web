@@ -123,6 +123,41 @@ const { Types, Creators } = createActions({
         }
     },
 
+    sendRecorder: (to, chatType, file) => {
+        return (dispatch, getState) => {
+            const formatMsg = formatLocalMessage(to, chatType, file, 'audio')
+            const { id } = formatMsg
+            const msgObj = new WebIM.message('audio', id)
+            msgObj.set({
+                ext: {
+                    file_length: file.data.size,
+                    file_type: file.data.type
+                },
+                file: file,
+                to,
+                chatType,
+                onFileUploadError: function (error) {
+                    console.log(error)
+                    // dispatch(Creators.updateMessageStatus(pMessage, "fail"))
+                    formatMsg.status = 'fail'
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
+                },
+                onFileUploadComplete: function (data) {
+                    let url = data.uri + '/' + data.entities[0].uuid
+                    formatMsg.url = url
+                    formatMsg.status = 'sent'
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'sent'))
+                },
+                fail: function () {
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
+                },
+            })
+
+            WebIM.conn.send(msgObj.body)
+            dispatch(Creators.addMessage(formatMsg, 'audio'))
+        }
+    },
+
     recallMessage: (to, chatType, message) => {
         return (dispatch, getState) => {
             const { id } = message

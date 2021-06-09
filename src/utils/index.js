@@ -147,6 +147,8 @@ export function formatServerMessage(message = {}, messageType) {
         body.size = body.file_length
     } else if (messageType === 'img') {
         body.type = 'img'
+    } else if (messageType === 'audio') {
+        body.type = 'audio'
     }
     return {
         ...formatMsg,

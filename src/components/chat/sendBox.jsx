@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import MessageActions from '@/redux/message'
 import { useParams } from "react-router-dom";
 import WebIM from '@/common/WebIM'
+import Recorder from './messages/recorder2'
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -56,6 +57,7 @@ function SendBox() {
     const inputRef = useRef(null)
     const inputValueRef = useRef(null)
     const imageEl = useRef(null)
+    const [showRecorder, setShowRecorder] = useState(false)
     inputValueRef.current = inputValue
     const handleClickEmoji = (e) => {
         setEmojiVisible(e.currentTarget)
@@ -133,8 +135,12 @@ function SendBox() {
         <Box className={classes.root}>
             <Box className={classes.toolbar}>
                 <IconButton ref={emojiRef} className="iconfont icon-biaoqing icon" onClick={handleClickEmoji}></IconButton>
+                {
+                    window.location.protocol === 'https:' &&
+                    <IconButton onClick={() => { setShowRecorder(true) }} className="iconfont icon-luyin icon"></IconButton>
+                }
 
-                {/* <IconButton className="iconfont icon-luyin icon"></IconButton> */}
+                <Recorder open={showRecorder} onClose={() => { setShowRecorder(false) }} />
                 <IconButton className="iconfont icon-tupian icon"
                     onClick={handleImageClick}
                 >

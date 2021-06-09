@@ -57,6 +57,13 @@ WebIM.conn.listen({
         // type === 'chat' && store.dispatch(MessageActions.sendRead(message))
         store.dispatch(SessionActions.topSession(sessionId, sessionType[type]))
     },
+    onAudioMessage: message => {
+        console.log('onAudioMessage', message)
+        const { type, from, to } = message
+        const sessionId = type === 'chat' ? from : to
+        store.dispatch(MessageActions.addMessage(message, 'audio'))
+        store.dispatch(SessionActions.topSession(sessionId, sessionType[type]))
+    },
 
     onRecallMessage: message => {
         console.log('onRecallMessage', message)
