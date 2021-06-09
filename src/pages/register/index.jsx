@@ -79,9 +79,9 @@ function Register(props) {
                     </Box>
                     <form className={classes.form} >
                         <TextField
+                            autoComplete="off"
                             inputProps={{ className: classes.input }}
                             margin="normal"
-                            required
                             value={values.userName}
                             fullWidth
                             id="email"
@@ -93,6 +93,7 @@ function Register(props) {
                         <FormControl className={classes.password}>
                             <InputLabel htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
                             <Input
+                                autoComplete="off"
                                 className={classes.input}
                                 id="standard-adornment-password"
                                 type={values.showPassword ? 'text' : 'password'}

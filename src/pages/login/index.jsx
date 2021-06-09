@@ -88,9 +88,9 @@ function Login(props) {
                     </Box>
                     <form className={classes.form} >
                         <BaseInput
+                            autoComplete="off"
                             inputProps={{ className: classes.input }}
                             margin="normal"
-                            required
                             value={values.userName}
                             fullWidth
                             id="email"
@@ -99,19 +99,10 @@ function Login(props) {
                             autoFocus
                             onChange={handleChange('userName')}
                         />
-                        {/* <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label={i18next.t('password')}
-                            type="password"
-                            id="password"
-                            onChange={handleChange('password')}
-                        /> */}
                         <FormControl className={classes.password}>
                             <InputLabel htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
                             <Input
+                                autoComplete="off"
                                 className={classes.input}
                                 id="standard-adornment-password"
                                 type={values.showPassword ? 'text' : 'password'}

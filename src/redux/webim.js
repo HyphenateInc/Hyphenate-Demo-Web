@@ -9,6 +9,8 @@ import RosterActions from "@/redux/roster"
 import SessionActions from "@/redux/session"
 import GroupActions from '@/redux/group'
 import NoticeActions from '@/redux/notice'
+import { message } from '@/components/common/Alert'
+import i18next from "i18next";
 const sessionType = {
     chat: 'singleChat',
     groupchat: 'groupChat',
@@ -87,8 +89,59 @@ WebIM.conn.listen({
                 break
         }
     },
-    onError: (err) => {
-        console.error(err)
+    onError: (error) => {
+        console.error(error)
+        // 16: server-side close the websocket connection
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {
+            if (WebIM.conn.autoReconnectNumTotal < WebIM.conn.autoReconnectNumMax) {
+                return
+            }
+            message.error(`${i18next.t('serverSideCloseWebsocketConnection')}`)
+            history.push('/login')
+            return
+        }
+        // 2: login by token failed
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_AUTH_ERROR) {
+            message.error(`${i18next.t('webIMConnectionAuthError')}`)
+            return
+        }
+        // 8: offline by multi login
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_SERVER_ERROR) {
+            message.error(i18next.t('offlineByMultiLogin'))
+            history.push('/login')
+            return
+        }
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_USER_REMOVED) {
+            message.error(i18next.t('userLogout'))
+            history.push('/login')
+            return
+        }
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_USER_LOGIN_ANOTHER_DEVICE) {
+            message.error(i18next.t('The account is logged in on a different device'))
+            history.push('/login')
+            return
+        }
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_USER_KICKED_BY_CHANGE_PASSWORD) {
+            message.error(i18next.t('User password has been changed'))
+            history.push('/login')
+            return
+        }
+        if (error.type === WebIM.statusCode.WEBIM_CONNCTION_USER_KICKED_BY_OTHER_DEVICE) {
+            message.error(i18next.t('You are kicked out by other devices'))
+            history.push('/login')
+            return
+        }
+        if (error.type === 1) {
+            let data = error.data ? JSON.parse(error.data.data) : {}
+            if (data.error_description === "user not found") {
+                message.error(i18next.t("The user name does not exist"))
+            } else if (data.error_description === "invalid password") {
+                message.error(i18next.t('Invalid password'))
+            } else if (data.error_description === "user not activated") {
+                message.error(i18next.t("The user has been banned"))
+            }
+            store.dispatch(LoginActions.loginFailure(error))
+        }
     },
     onClosed: msg => {
         console.warn('onClosed', msg)

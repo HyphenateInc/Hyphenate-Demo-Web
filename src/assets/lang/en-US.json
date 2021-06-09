@@ -34,6 +34,15 @@
         "removeSingleGroupMember": "Remove member from group",
         "Numbers": "Numbers",
         "nickname": "nickname",
-        "User name over 64 bytes!": "User name over 64 bytes!"
+        "User name over 64 bytes!": "User name over 64 bytes!",
+        "serverSideCloseWebsocketConnection": "server side close Websocket connection",
+        "offlineByMultiLogin": "offline by multi login",
+        "userLogout": "user logout",
+        "The account is logged in on a different device": "The account is logged in on a different device",
+        "User password has been changed": "User password has been changed",
+        "You are kicked out by other devices": "You are kicked out by other devices",
+        "The user name does not exist": "The user name does not exist",
+        "Invalid password": "Invalid password",
+        "The user has been banned": "The user has been banned"
     }
 }

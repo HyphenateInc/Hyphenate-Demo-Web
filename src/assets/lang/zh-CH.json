@@ -40,6 +40,15 @@
         "User-Setting": "设置",
         "UserSetting-about": "关于",
         "nickname": "昵称",
-        "User name over 64 bytes!": "用户名超过64字节！"
+        "User name over 64 bytes!": "用户名超过64字节！",
+        "serverSideCloseWebsocketConnection": "服务度断开websocket连接",
+        "offlineByMultiLogin": "你已在其他端登录",
+        "userLogout": "用户下线",
+        "The account is logged in on a different device": "账户在另外一台设备登录",
+        "User password has been changed": "用户密码已修改",
+        "You are kicked out by other devices": "你被其他设备踢掉",
+        "The user name does not exist": "用户名不存在",
+        "Invalid password": "密码不正确",
+        "The user has been banned": "用户已被封禁"
     }
 }
