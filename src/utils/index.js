@@ -21,7 +21,7 @@ const { username } = qs.parse(window.location.hash.split('?')[1]);
 })(document, window);
 
 export function getToken() {
-    return Cookie.get('web_im_' + username);
+    return Cookie.get('webim_' + username);
 }
 
 export function getUserName() {

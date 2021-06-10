@@ -5,6 +5,7 @@ import Cookie from 'js-cookie'
 import CommonActions from '@/redux/common'
 import { history } from '@/common/routes'
 import { message } from '@/components/common/Alert'
+import i18next from 'i18next';
 /* ------------- Types and Action Creators ------------- */
 const { Types, Creators } = createActions({
     setLoginInfo: ['username', 'password', 'token'],
@@ -19,7 +20,7 @@ const { Types, Creators } = createActions({
                 appKey: WebIM.config.appkey,
                 success(token) {
                     dispatch(Creators.setLoginInfo(username, password, token.access_token))
-                    Cookie.set('webim_' + username, token)
+                    Cookie.set('webim_' + username, token.access_token)
                 },
                 error: e => {
                     console.error('login fail:', e)
@@ -34,7 +35,6 @@ const { Types, Creators } = createActions({
             dispatch(Creators.setLoginInfo(username, null, token))
             WebIM.conn.open({
                 user: username.trim().toLowerCase(),
-                pwd: token,
                 accessToken: token,
                 appKey: WebIM.config.appkey
             })
@@ -77,18 +77,18 @@ const { Types, Creators } = createActions({
 
                 error: (err) => {
                     if (JSON.parse(err.data).error === 'duplicate_unique_property_exists') {
-
+                        message.error(i18next.t('User already exists'))
                     } else if (JSON.parse(err.data).error === 'illegal_argument') {
                         if (JSON.parse(err.data).error_description === 'USERNAME_TOO_LONG') {
-                            return message.error('User name over 64 bytes!')
+                            return message.error(i18next.t('User name over 64 bytes!'))
                         } else if (JSON.parse(err.data).error_description === 'password or pin must provided') {
-                            return message.error('The password is not valid!')
+                            return message.error(i18next.t('Password is not valid'))
                         }
-                        message.error('用户名不合法！')
+                        message.error(i18next.t('User name is not valid'))
                     } else if (JSON.parse(err.data).error === 'unauthorized') {
-                        message.error('Registration failed, no permissions!')
+                        message.error(i18next.t('Registration failed, no permissions'))
                     } else if (JSON.parse(err.data).error === 'resource_limited') {
-                        message.error('Your APP user registration has reached the maximum number, please upgrade to the enterprise version!')
+                        message.error(i18next.t('registration has reached the maximum number'))
                     }
                 }
             }

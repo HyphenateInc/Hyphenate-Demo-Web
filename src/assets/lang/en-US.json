@@ -43,6 +43,12 @@
         "You are kicked out by other devices": "You are kicked out by other devices",
         "The user name does not exist": "The user name does not exist",
         "Invalid password": "Invalid password",
-        "The user has been banned": "The user has been banned"
+        "The user has been banned": "The user has been banned",
+        "User already exists": "User already exists",
+        "User name over 64 bytes": "User name over 64 bytes",
+        "Password is not valid": "Password is not valid",
+        "User name is not valid": "User name is not valid",
+        "Registration failed, no permissions": "Registration failed, no permissions",
+        "registration has reached the maximum number": "Your APP user registration has reached the maximum number, please upgrade to the enterprise version"
     }
 }

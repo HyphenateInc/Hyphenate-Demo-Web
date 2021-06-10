@@ -90,7 +90,7 @@ WebIM.conn.listen({
         }
     },
     onError: (error) => {
-        console.error(error)
+        console.log('onError', error)
         // 16: server-side close the websocket connection
         if (error.type === WebIM.statusCode.WEBIM_CONNCTION_DISCONNECTED) {
             if (WebIM.conn.autoReconnectNumTotal < WebIM.conn.autoReconnectNumMax) {
@@ -140,10 +140,11 @@ WebIM.conn.listen({
             } else if (data.error_description === "user not activated") {
                 message.error(i18next.t("The user has been banned"))
             }
-            store.dispatch(LoginActions.loginFailure(error))
         }
     },
     onClosed: msg => {
         console.warn('onClosed', msg)
+        history.push('/login')
+        store.dispatch(CommonActions.setLoading(false))
     },
 })
