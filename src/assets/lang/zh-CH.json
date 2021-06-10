@@ -19,6 +19,7 @@
         "Create Group": "创建群组",
         "Group": "群组",
         "Chat Room": "聊天室",
+        "notice": "通知",
         "Group Id": "群组ID",
         "Personal Data": "个人信息",
         "Settings": "设置",
@@ -30,6 +31,7 @@
         "removeAdmin": "移除管理员",
         "mute": "禁言",
         "muted": "已被禁言",
+        "Unmute": "未禁言",
         "groupBlockSingle": "加入群黑名单",
         "removeSingleGroupMember": "从本群移除",
         "Numbers": "数量",
@@ -55,6 +57,20 @@
         "Password is not valid": "密码不合法",
         "User name is not valid": "用户名不合法",
         "Registration failed, no permissions": "注册失败，无权限",
-        "registration has reached the maximum number": "注册量已达上限，请升级企业版"
+        "registration has reached the maximum number": "注册量已达上限，请升级企业版",
+        "no more messages": "没有更多消息啦 ～",
+        "Invite Member": "邀请群成员",
+        "Modify Information": "编辑群信息",
+        "Blacklist": "群组黑名单",
+        "Dissolve Group": "解散群组",
+        "Quit Group": "退出群组",
+        "Group ID": "群组ID",
+        "Appear in group search": "是否为公开群",
+        "Public": "公开群",
+        "Non public": "私有群",
+        "Allow members to invite": "允许成员邀请",
+        "Able": "允许",
+        "Disable": "不允许",
+        "Block group message": "群组禁言"
     }
 }

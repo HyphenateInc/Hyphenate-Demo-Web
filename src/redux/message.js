@@ -30,6 +30,7 @@ const { Types, Creators } = createActions({
     updateMessageStatus: ['message', 'status'],
     clearUnread: ["chatType", "sessionId"],
     updateMessages: ["chatType", "sessionId", "messages"],
+    updateMessageMid: ['id', 'mid'],
     // -async-
     sendTxtMessage: (to, chatType, message = {}) => {
         return (dispatch, getState) => {
@@ -160,10 +161,10 @@ const { Types, Creators } = createActions({
 
     recallMessage: (to, chatType, message) => {
         return (dispatch, getState) => {
-            const { id } = message
+            const { id, toJid } = message
             WebIM.conn.recallMessage({
                 to: to,
-                mid: id, // message id
+                mid: toJid, // message id
                 type: chatType,
                 success: () => {
                     dispatch(Creators.deleteMessage(id))
@@ -292,14 +293,19 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
     }
     const byId = state.getIn(['byId', id])
     if (!_.isEmpty(byId)) {
-        const { type, chatId } = byId
-        let messages = state.getIn([type, chatId]).asMutable()
+        const { chatType, chatId } = byId
+        let messages = state.getIn([chatType, chatId]).asMutable()
         let found = _.find(messages, { id: parseInt(id) })
-        let msg = found.setIn(['status'], status)
-        msg = found.setIn(['toJid'], mid)
+        found.setIn(['status'], status)
+        found.setIn(['toJid'], mid)
+        let msg = {
+            ...found,
+            status: status,
+            toJid: mid
+        }
         messages.splice(messages.indexOf(found), 1, msg)
         AppDB.updateMessageStatus(id, status).then(res => { })
-        state = state.setIn([type, chatId], messages)
+        return state.setIn([chatType, chatId], messages)
     }
     return state
 }
@@ -346,6 +352,20 @@ export const updateMessages = (state, { chatType, sessionId, messages }) => {
     return state.setIn([chatType, sessionId], messages)
 }
 
+export const updateMessageMid = (state, { id, mid }) => {
+    const byId = state.getIn(['byId', id])
+    if (!_.isEmpty(byId)) {
+        const { chatType, chatId } = byId
+        let messages = state.getIn([chatType, chatId]).asMutable()
+        let found = _.find(messages, { id: parseInt(id) })
+        let msg = found.setIn(['toJid'], mid)
+        messages.splice(messages.indexOf(found), 1, msg)
+        state = state.setIn([chatType, chatId], messages)
+    }
+    AppDB.updateMessageMid(mid, Number(id))
+    return state.setIn(['byMid', mid], { id })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const messageReducer = createReducer(INITIAL_STATE, {
@@ -354,7 +374,9 @@ export const messageReducer = createReducer(INITIAL_STATE, {
     [Types.CLEAR_UNREAD]: clearUnread,
     [Types.FETCH_MESSAGE]: fetchMessage,
     [Types.CLEAR_MESSAGE]: clearMessage,
-    [Types.UPDATE_MESSAGES]: updateMessages
+    [Types.UPDATE_MESSAGES]: updateMessages,
+    [Types.UPDATE_MESSAGE_MID]: updateMessageMid,
+    [Types.UPDATE_MESSAGE_STATUS]: updateMessageStatus,
 })
 
 export default Creators

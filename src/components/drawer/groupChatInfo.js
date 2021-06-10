@@ -191,31 +191,21 @@ function GroupChatInfo({ onDissolve }) {
                 onClose={() => setAddEl(null)}
             >
                 <MenuItem onClick={() => { setShowInvite(true) }}>
-
                     <Typography variant="inherit" noWrap>
                         {i18next.t('Invite Member')}
                     </Typography>
                 </MenuItem>
                 {myRole === 'owner' && <MenuItem onClick={() => { setShowModify(true) }}>
-                    <Box className={classes.menuItemIconBox}>
-                        <Icon className="iconfont icon-chuangjianqunzu"></Icon>
-                    </Box>
                     <Typography variant="inherit" noWrap>
                         {i18next.t('Modify Information')}
                     </Typography>
                 </MenuItem>}
                 {myRole === 'owner' && < MenuItem onClick={handleBlackListClick}>
-                    <Box className={classes.menuItemIconBox}>
-                        <Icon className="iconfont icon-tianjiahaoyou"></Icon>
-                    </Box>
                     <Typography variant="inherit" noWrap>
                         {i18next.t('Blacklist')}
                     </Typography>
                 </MenuItem>}
                 <MenuItem onClick={handleDissolveClick}>
-                    <Box className={classes.menuItemIconBox}>
-                        <Icon className="iconfont icon-qunhaoyou"></Icon>
-                    </Box>
                     <Typography variant="inherit" noWrap>
                         {myRole === 'owner' ? i18next.t('Dissolve Group') : i18next.t('Quit Group')}
                     </Typography>
@@ -236,26 +226,26 @@ function GroupChatInfo({ onDissolve }) {
                 <div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Group ID</span>
+                            <span>{i18next.t('Group ID')}</span>
                             <span>{currentGroup}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Appear in group search</span>
-                            <span>{groupInfo.public ? 'Public' : 'Non public'}</span>
+                            <span>{i18next.t('Appear in group search')}</span>
+                            <span>{groupInfo.public ? i18next.t('Public') : i18next.t('Non public')}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Allow members to invite</span>
-                            <span>{groupInfo.allowinvites ? 'Able' : 'Disable'}</span>
+                            <span>{i18next.t('Allow members to invite')}</span>
+                            <span>{groupInfo.allowinvites ? i18next.t('Able') : i18next.t('Disable')}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Block group message</span>
-                            <span>{groupInfo.mute ? 'Mute' : 'Unmute'}</span>
+                            <span>{i18next.t('Block group message')}</span>
+                            <span>{groupInfo.mute ? i18next.t('muted') : i18next.t('Unmute')}</span>
                         </div>
                     </div>
                 </div>

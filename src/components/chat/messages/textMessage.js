@@ -38,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
         top: '-18px',
         width: '100%'
     },
+    read: {
+        fontSize: '10px',
+        color: 'rgba(0,0,0,.15)',
+        margin: '3px'
+    }
 }))
 const initialState = {
     mouseX: null,
@@ -100,6 +105,7 @@ function TextMessage({ message, onRecallMessage }) {
             <div className={classes.time}>
                 {renderTime(message.time)}
             </div>
+            {message.status === 'read' ? <div className={classes.read}>{i18next.t('Read')}</div> : null}
             {message.bySelf ?
                 <Menu
                     keepMounted

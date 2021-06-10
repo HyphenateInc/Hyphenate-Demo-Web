@@ -87,15 +87,11 @@ export default function AddressBookDialog(props) {
         } else {
             const { value } = itemData
             if (value === 'group') {
-                if (!groupList.length) {
-                    dispatch(GroupActions.getGroups())
-                }
+                dispatch(GroupActions.getGroups())
                 setGroupOpen(true)
             }
             else if (value === 'chatroom') {
-                if (!chatRoomList.length) {
-                    dispatch(ChatRoomActions.getChatRooms())
-                }
+                dispatch(ChatRoomActions.getChatRooms())
                 setChatRoomOpen(true)
             }
         }

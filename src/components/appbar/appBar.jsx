@@ -22,6 +22,7 @@ import CommonActions from '@/redux/common'
 import GroupActions from '@/redux/group'
 import MessageActions from '@/redux/message'
 import SessionActions from '@/redux/session'
+import RosterActions from '@/redux/roster'
 import LoginActions from '@/redux/login'
 import { useSelector, useDispatch } from 'react-redux'
 import UserInfoDialog from '@/components/appbar/userInfo/index'
@@ -208,6 +209,7 @@ function ProminentAppBar(props) {
     // ------- 1th Add menu item -------
     function getAdress() {
         setShowAddressBook(true)
+        dispatch(RosterActions.getContacts())
     }
     function handleAddressBookDialogClose() {
         setShowAddressBook(false)

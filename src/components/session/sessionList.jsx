@@ -15,6 +15,7 @@ import chatRoomIcon from '@/assets/images/chatroom@2x.png'
 import noticeIcon from '@/assets/images/notice@2x.png'
 import GroupMemberActions from '@/redux/groupMember'
 import ChatRoomActions from '@/redux/chatRoom'
+import i18next from 'i18next';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -96,6 +97,8 @@ export default function SessionList(props) {
     const { unread } = message
     const currentSession = useSelector(state => state.session.currentSession)
     const groupMember = useSelector(state => state.group.groupMember)
+    const chatRoombyId = useSelector(state => state.chatRoom.byId) || {}
+    const groupbyId = useSelector(state => state.group.group.byId) || {}
     let currentSessionIndex = 0
     let { chatType, to } = useParams()
 
@@ -166,24 +169,31 @@ export default function SessionList(props) {
         }
     };
 
-    if (!currentSession && renderSessionList[0]) {
-        props.onClickItem(renderSessionList[0])
-    }
+
+    useEffect(() => {
+        if (!currentSession && renderSessionList[0]) {
+            props.onClickItem(renderSessionList[0])
+        }
+    }, [])
     return (
         <List dense className={classes.root}>
             {renderSessionList.map((session, index) => {
                 let avatarSrc = ''
+                let sessionName = session.sessionId // TODO: user info
                 if (session.sessionType === 'groupChat') {
                     avatarSrc = groupIcon
+                    sessionName = groupbyId?.[session.sessionId]?.groupName
                 }
                 else if (session.sessionType === 'chatRoom') {
                     avatarSrc = chatRoomIcon
+                    sessionName = chatRoombyId?.[session.sessionId]?.name
                 }
                 else if (session.sessionType === 'notice') {
                     avatarSrc = noticeIcon
+                    sessionName = i18next.t('notice')// session.sessionId === 'notice'
                 }
                 return (
-                    <ListItem key={session.sessionId}
+                    <ListItem key={session.sessionId + index}
                         selected={currentSessionIndex === index}
                         onClick={(event) => handleListItemClick(event, index, session)}
                         button className={classes.listItem}>
@@ -197,13 +207,16 @@ export default function SessionList(props) {
                             </ListItemAvatar>
                             <Box className={classes.itemRightBox}>
                                 <Typography className={classes.itemName}>
-                                    <span>{session.sessionId}</span>
+                                    <span>{sessionName}</span>
 
                                     <span className={classes.time}>{renderTime(session?.lastMessage?.time)}</span>
                                 </Typography>
 
                                 <Typography className={classes.itemMsgBox}>
-                                    <span className={classes.itemMsg}>{session?.lastMessage?.body?.msg}</span>
+                                    <span className={classes.itemMsg}>{
+                                        session?.lastMessage?.body?.type === 'recall' ?
+                                            `${session?.lastMessage.from} ${i18next.t('retracted a message')}` :
+                                            session?.lastMessage?.body?.msg}</span>
 
                                     <span className={classes.unreadNum} style={{ display: session.unreadNum ? 'inline-block' : 'none' }}>{session.unreadNum}</span>
                                 </Typography>

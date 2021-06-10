@@ -9,6 +9,7 @@ import RosterActions from "@/redux/roster"
 import SessionActions from "@/redux/session"
 import GroupActions from '@/redux/group'
 import NoticeActions from '@/redux/notice'
+import ChatRoomActions from '@/redux/chatRoom'
 import { message } from '@/components/common/Alert'
 import i18next from "i18next";
 const sessionType = {
@@ -22,18 +23,24 @@ WebIM.conn.listen({
         const userName = store.getState().login.username
         // init DB
         AppDB.init(userName)
-
-        const path = history.location.pathname.indexOf('singleChat') === -1 ? '/singleChat' : history.location.pathname
-        const redirectUrl = `${path}?username=${userName}`
-        console.log('redirectUrl', redirectUrl)
-        history.push(redirectUrl)
-
         // get session list
         store.dispatch(SessionActions.getSessionList())
         // get roster
         store.dispatch(RosterActions.getContacts())
         store.dispatch(GroupActions.getGroups())
-        // store.dispatch(CommonActions.setLoading(false))
+        store.dispatch(ChatRoomActions.getChatRooms())
+        const defaultSelected = store.getState().session?.sessionList[0]
+        let redirectUrl
+        if (defaultSelected) {
+            const { sessionType, sessionId } = defaultSelected
+            redirectUrl = `${sessionType}/${sessionId}?username=${userName}`
+        } else {
+            const path = history.location.pathname.indexOf('singleChat') === -1 ? '/singleChat' : history.location.pathname
+            redirectUrl = `${path}?username=${userName}`
+        }
+
+        console.log('redirectUrl', redirectUrl)
+        history.push(redirectUrl)
     },
 
     onTextMessage: message => {
@@ -71,6 +78,19 @@ WebIM.conn.listen({
         console.log('onRecallMessage', message)
         store.dispatch(MessageActions.deleteMessage(message))
     },
+    // The other has read the message
+    onReadMessage: message => {
+        console.log('onReadMessage', message)
+        store.dispatch(MessageActions.updateMessageStatus(message, 'read'))
+    },
+
+    // Server received message
+    onReceivedMessage: message => {
+        console.log('onReceivedMessage', message)
+        const { id, mid } = message
+        store.dispatch(MessageActions.updateMessageMid(id, mid))
+    },
+
 
     onContactInvited: function (msg) {
         store.dispatch(NoticeActions.addFriendRequest(msg))
@@ -96,13 +116,13 @@ WebIM.conn.listen({
             if (WebIM.conn.autoReconnectNumTotal < WebIM.conn.autoReconnectNumMax) {
                 return
             }
-            message.error(`${i18next.t('serverSideCloseWebsocketConnection')}`)
+            message.error(`${i18next.t('serverSideCloseWebsocketConnection')} `)
             history.push('/login')
             return
         }
         // 2: login by token failed
         if (error.type === WebIM.statusCode.WEBIM_CONNCTION_AUTH_ERROR) {
-            message.error(`${i18next.t('webIMConnectionAuthError')}`)
+            message.error(`${i18next.t('webIMConnectionAuthError')} `)
             return
         }
         // 8: offline by multi login

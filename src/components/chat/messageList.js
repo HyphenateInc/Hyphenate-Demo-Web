@@ -13,6 +13,7 @@ import ImgMessage from './messages/imageMessage';
 import AudioMessage from './messages/audioMessage';
 import TextMessage from './messages/textMessage';
 import { useParams } from "react-router-dom";
+import i18next from 'i18next';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -82,7 +83,7 @@ function MessageList({ messageList }) {
             <div ref={scrollEl} className="pulldown-wrapper" onScroll={handleScroll}>
                 <div className="pulldown-tips">
                     <div style={{ display: isLoaded ? 'block' : 'none' }}>
-                        <span>loaded</span>
+                        <span style={{ fontSize: '12px' }}>{i18next.t('no more messages')}</span>
                     </div>
                     <div style={{ display: isPullingDown ? 'block' : 'none' }}>
                         <span>Loading...</span>
