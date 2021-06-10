@@ -16,7 +16,7 @@ import { history } from '@/common/routes'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
-            width: '100%',
+            width: theme.spacing(86),
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
