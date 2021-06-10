@@ -107,8 +107,6 @@ export default function SessionList(props) {
             noticeUnreadNum++
         }
     })
-    console.log('******&&&&&& sessionList', sessionList)
-
     const renderSessionList = sessionList.asMutable({ deep: true })
         .map((session) => {
             const chatMsgs = message?.[session.sessionType]?.[session.sessionId] || []
@@ -168,6 +166,9 @@ export default function SessionList(props) {
         }
     };
 
+    if (!currentSession && renderSessionList[0]) {
+        props.onClickItem(renderSessionList[0])
+    }
     return (
         <List dense className={classes.root}>
             {renderSessionList.map((session, index) => {
