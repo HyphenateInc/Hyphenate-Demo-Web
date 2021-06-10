@@ -40,7 +40,7 @@ export default function ModifyInfoDialog({ open, onClose }) {
         if (!inputValue) {
             return setError(true)
         }
-        dispatch(GroupActions.updateGroupInfoAsync(currentGroup, inputValue))
+        dispatch(GroupActions.updateGroupInfoAsync({ groupId: currentGroup, groupName: inputValue }))
         message.success(i18next.t(' Submit Success'))
         setInputValue('')
         setError(null)

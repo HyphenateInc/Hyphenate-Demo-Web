@@ -147,12 +147,15 @@ export const dissolveGroup = (state, { group }) => {
 }
 
 export const updateGroupInfo = (state, { info }) => {
-    const group = state.getIn(['byId', info.groupId])
+    const group = state.getIn(['byId', info.groupId]).asMutable({ deep: true })
     const oldName = `${group.groupName}_#-#_${group.roomId || group.groupId}`
     const newName = `${info.groupName}_#-#_${group.roomId || group.groupId}`
     const names = state.getIn(['names']).asMutable()
     names.splice(names.indexOf(oldName), 1, newName)
-    return state.setIn(['byId', info.groupId, 'groupName'], info.groupName).set('names', names.sort())
+    group.info.name = info.groupName
+    group.groupName = info.groupName
+    state.setIn(['byId', info.groupId], { ...group })
+    return state.setIn(['byId', info.groupId], group).set('names', names.sort())
 }
 
 export const getGroupInfo = (state, { groupInfo }) => {

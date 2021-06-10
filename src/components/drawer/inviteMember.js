@@ -40,7 +40,7 @@ export default function InviteDialog({ open, onClose }) {
         if (!inputValue) {
             return setError(true)
         }
-        dispatch(GroupMemberActions.inviteToGroupAsync(currentGroup, inputValue))
+        dispatch(GroupMemberActions.inviteToGroupAsync(currentGroup, [inputValue]))
         message.success(i18next.t('Successfully send the application'))
         setInputValue('')
         setError(null)

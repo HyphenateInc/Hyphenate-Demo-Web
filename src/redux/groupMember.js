@@ -55,7 +55,8 @@ const { Types, Creators } = createActions({
                 },
                 error: e => {
                     if (e.type === 17) {
-                        message.error('no authorization');
+                        let errorData = JSON.parse(e.data)
+                        message.error('no authorization:' + errorData.error_description);
                     }
                 }
             })
