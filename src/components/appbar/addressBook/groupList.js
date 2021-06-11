@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme) => {
 export default function GroupList({ open, onClose }) {
     const classes = useStyles();
     const dispatch = useDispatch()
-    const sessionList = useSelector(state => state.session.sessionList.asMutable())
-    const groupList = useSelector(state => state.group.group.names)
+    const sessionList = useSelector(state => state.session.sessionList.asMutable())||[]
+    const groupList = useSelector(state => state.group.group.names)||[]
     const handleClose = () => {
         onClose()
     }

@@ -8,6 +8,7 @@ import MessageActions from '@/redux/message'
 import RosterActions from "@/redux/roster"
 import SessionActions from "@/redux/session"
 import GroupActions from '@/redux/group'
+import GroupMemberActions from '@/redux/groupMember'
 import NoticeActions from '@/redux/notice'
 import ChatRoomActions from '@/redux/chatRoom'
 import { message } from '@/components/common/Alert'
@@ -96,16 +97,95 @@ WebIM.conn.listen({
     onContactInvited: function (msg) {
         store.dispatch(NoticeActions.addFriendRequest(msg))
     },
-    onContactDeleted: function () { },
-    onContactAdded: function () { },
-    onContactRefuse: function () { },
-    onContactAgreed: function () { },
+    onContactDeleted: function (msg) {
+        store.dispatch(RosterActions.getContacts())
+        store.dispatch(MessageActions.clearUnread('chat', msg.from))
+        message.warning(msg.from + '' + i18next.t('Deleted'))
+    },
+    onContactAdded: function (msg) {
+        store.dispatch(RosterActions.getContacts())
+        message.warning(msg.from + '' + i18next.t('subscribed'))
+    },
+    onContactRefuse: function (msg) {
+        message.warning(msg.from + '' + i18next.t('refuse'))
+    },
+    onContactAgreed: function (msg) {
+        message.success(msg.from + '' + i18next.t('agreed'))
+    },
 
     onPresence: msg => {
+        console.log('onPresence', msg)
         switch (msg.type) {
             case 'joinGroupNotifications':
                 store.dispatch(NoticeActions.addGroupRequest(msg))
                 break;
+            case 'deleteGroupChat':
+                message.error(`group${msg.gid} was destroyed.`)
+                store.dispatch(GroupActions.getGroups())
+                store.dispatch(MessageActions.clearUnread('groupchat', msg.gid))
+                break
+            case 'leaveGroup': // 某人离开群
+                message.error(
+                    `${msg.from}${i18next.t('LeaveGroup')}${msg.gid}.`
+                )
+                break
+            case 'removedFromGroup':
+                message.error(
+                    `${msg.kicked || i18next.t('you')} ${i18next.t('dismissed')}${i18next.t('by')}${msg.owner ||
+                    i18next.t('admin')} .`
+                )
+                store.dispatch(GroupActions.getGroups())
+                store.dispatch(MessageActions.clearUnread('groupchat', msg.gid))
+                break
+            case 'invite': //nvite you to group
+                debugger
+                msg.status = ''
+                store.dispatch(NoticeActions.addGroupRequest(msg))
+                break
+            case 'direct_joined': //Dragged into the group
+                message.success(`${msg.from}${i18next.t('invite')}${i18next.t('you')}${i18next.t('join')}${msg.gid}`)
+                store.dispatch(GroupActions.getGroups())
+                break
+            case 'joinPublicGroupSuccess':
+                message.success(`${i18next.t('joinGroup')} ${msg.from} ${i18next.t('successfully')}`)
+                store.dispatch(GroupActions.getGroups())
+                break
+            case 'joinPublicGroupDeclined':
+                message.error(
+                    `${i18next.t('join')}${i18next.t('group')}${msg.gid}${i18next.t('refuse')}${i18next.t('by')}${msg.owner}`
+                )
+                break
+            case 'joinChatRoomSuccess': // Join the chat room successfully
+                message.success('Join the chat room successfully')
+                break
+            case 'reachChatRoomCapacity': // Failed to join the chat room
+                message.error(`${i18next.t('joinGroup')}${i18next.t('failed')}`)
+                break
+            case 'memberJoinPublicGroupSuccess':
+                message.success(`${msg.from}${i18next.t('join')}${i18next.t('group')}${msg.gid}${i18next.t('successfully')}`)
+                store.dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: msg.gid }))
+                break
+            case 'memberJoinChatRoomSuccess':
+                message.success(`${msg.from}${i18next.t('join')}${i18next.t('chatroom')}${msg.gid}${i18next.t('successfully')}`)
+                break
+            case 'leaveChatRoom': // Leave the chat room
+                message.warning(`${msg.from} left the chatroom: ${msg.gid}`)
+                break
+            case 'addMute':
+                message.warning('you was muted')
+                break
+            case 'removeMute':
+                message.success('you was unmuted')
+                break
+            case 'addAdmin':
+                message.success('you were set to be an admin')
+                break
+            case 'removeAdmin':
+                message.success('your admin has been canceled')
+                break
+            case 'changeOwner':
+                message.success('You`ve become group managerd')
+                break
             default:
                 break
         }

@@ -60,8 +60,11 @@ const initState = Immutable({
         currentSession: ''
     },
     group: {
-        groupMember: {},
-        group: {}
+        groupMember: { groupMember: [] },
+        group: {
+            groupList: [], byId: {},
+            names: []
+        }
     },
     chatRoom: { chatRoomList: [] },
     notice: { notices: [] },

@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Avatar, Button } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import NoticeActions from '@/redux/notice'
+import WebIM from '@/common/WebIM'
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -62,6 +63,14 @@ function Notice() {
         if (msg.type === 'joinGroupNotifications') {
             dispatch(NoticeActions.agreeJoinGroup(msg))
         }
+        else if (msg.type === 'invite') {
+            dispatch(NoticeActions.agreeInviteIntoGroup(msg.gid, {
+                groupId: msg.gid,
+                invitee: WebIM.conn.context.userId,
+                success: () => { },
+                error: () => { }
+            }))
+        }
         else {
             dispatch(NoticeActions.acceptFriendRequest(msg))
         }
@@ -70,13 +79,26 @@ function Notice() {
         if (msg.type === 'joinGroupNotifications') {
             dispatch(NoticeActions.rejectJoinGroup(msg))
         }
-        dispatch(NoticeActions.declineFriendRequest(msg))
+        else if (msg.type === 'invite') {
+            dispatch(NoticeActions.rejectInviteIntoGroup(msg.gid, {
+                groupId: msg.gid,
+                invitee: WebIM.conn.context.userId,
+                success: () => { },
+                error: () => { }
+            }))
+        }
+        else {
+            dispatch(NoticeActions.declineFriendRequest(msg))
+        }
     }
+
     return (
         <div className={classes.root}>
             <div>
                 {notices.length ? notices.map((msg, index) => {
-                    const noticeType = msg.type === 'joinGroupNotifications' ? 'groupRequest' : 'friendRequest'
+                    const noticeType = (msg.type === 'joinGroupNotifications' || msg.type === 'invite') ? 'groupRequest' : 'friendRequest'
+                    const requestmsg = noticeType === 'friendRequest' ? msg.status :
+                        `${msg.from} invite you join group ${msg.gid}`
                     return <div className={classes.itemBox} key={msg.from + index}>
                         <div className={classes.header}>
                             {noticeType === 'friendRequest' ? 'Request add friend' :
@@ -86,7 +108,7 @@ function Notice() {
                         <div className={classes.content}>
                             <Box className={classes.msgBox}>
                                 <Avatar></Avatar>
-                                <span>{msg.status}</span>
+                                <span>{requestmsg}</span>
                             </Box>
                             <Box className={classes.btnBox}>
                                 <Button
