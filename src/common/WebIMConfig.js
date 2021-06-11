@@ -10,7 +10,7 @@ const config = {
     /*
      * Whether to use HTTPS
      * @parameter {Boolean} true or false
-     *
+     */
     https: true,
 
     /*
