@@ -103,16 +103,16 @@ function SingleChatInfo({ onDelete }) {
                 <div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>User ID</span>
+                            <span>{i18next.t('User Id')}</span>
                             <span>{currentUser}</span>
                         </div>
                     </div>
-                    <div className={classes.infoItem}>
+                    {/* <div className={classes.infoItem}>
                         <div>
                             <span>User Name</span>
                             <span>{userInfo?.info?.nickname}</span>
                         </div>
-                    </div>
+                    </div> */}
                     {/* TODO: other infos*/}
                 </div>
             </main>

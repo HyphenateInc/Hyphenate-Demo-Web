@@ -62,7 +62,7 @@ export default function ModifyInfoDialog({ open, onClose }) {
                     {i18next.t('Group Name')}
                 </Typography>
                 <TextField
-                    id="outlined-basic" label="group name" variant="outlined" fullWidth autoFocus name="email"
+                    id="outlined-basic" label={i18next.t('Group Name')} variant="outlined" fullWidth autoFocus name="email"
                     error={error}
                     value={inputValue}
                     onChange={handleChange} />

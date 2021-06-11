@@ -15,7 +15,9 @@ const useStyles = makeStyles((theme) => {
             minHeight: '35vh',
             margin: 0,
             padding: 0,
-            overflowX: 'hidden'
+            overflowX: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
         },
         listItem: {
             height: theme.spacing(14),
@@ -54,7 +56,9 @@ const useStyles = makeStyles((theme) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            marginTop: '-30px'
+            marginTop: '-30px',
+            flex: 1,
+            color: 'rgba(0,0,0,.25)'
         }
     })
 });
@@ -103,7 +107,7 @@ export default function BlackListDialog(props) {
                             <Button
                                 onClick={() => { handleRemove(userId) }}
                                 variant="outlined" color="primary" style={{ position: 'absolute', right: '18px' }}>
-                                remove
+                                {i18next.t('remove')}
                             </Button>
                         </ListItem>
                     );

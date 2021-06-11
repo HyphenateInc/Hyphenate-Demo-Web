@@ -66,6 +66,15 @@
         "Able": "Able",
         "Disable": "Disable",
         "Block group message": "Block group message",
-        "Delete Friend": "Delete Friend"
+        "Delete Friend": "Delete Friend",
+        "Set as admin": "Set as admin",
+        "Remove admin": "Remove admin",
+        "Owner": "Owner",
+        "Send Invite": "Send Invite",
+        "Modify Info": "Modify Info",
+        "Group Name": "Group Name",
+        "Submit": "Submit",
+        "Black List": "Black List",
+        "remove": "remove"
     }
 }

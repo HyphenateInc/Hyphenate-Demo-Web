@@ -72,6 +72,15 @@
         "Able": "允许",
         "Disable": "不允许",
         "Block group message": "群组禁言",
-        "Delete Friend": "删除好友"
+        "Delete Friend": "删除好友",
+        "Set as admin": "设为管理员",
+        "Remove admin": "移除管理员",
+        "Owner": "群主",
+        "Send Invite": "发送邀请",
+        "Modify Info": "编辑群信息",
+        "Group Name": "群组名称",
+        "Submit": "提交",
+        "Black List": "黑名单",
+        "remove": "移除"
     }
 }

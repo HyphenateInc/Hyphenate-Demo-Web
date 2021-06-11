@@ -110,12 +110,12 @@ function GroupChatInfo({ onDissolve }) {
         let RoleIcon = null
         let MuteIcon = null
         if (memberRole === 'owner') {
-            RoleIcon = <Tooltip title={i18next.t('Set as admin')}>
+            RoleIcon = <Tooltip title={i18next.t('Owner')}>
                 <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-guanliyuan")} style={{ color: '#00BA6E' }} />
             </Tooltip>
         }
         else if (memberRole === 'admin') {
-            RoleIcon = <Tooltip title={i18next.t('Set as admin')}>
+            RoleIcon = <Tooltip title={i18next.t('Remove admin')}>
                 <IconButton
                     onClick={() => {
                         dispatch(GroupMemberActions.removeAdminAsync(currentGroup, member.id))

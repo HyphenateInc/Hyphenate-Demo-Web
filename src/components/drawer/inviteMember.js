@@ -62,7 +62,7 @@ export default function InviteDialog({ open, onClose }) {
                     {i18next.t('User Id')}
                 </Typography>
                 <TextField
-                    id="outlined-basic" label="userId" variant="outlined" fullWidth autoFocus name="email"
+                    id="outlined-basic" label={i18next.t('User Id')} variant="outlined" fullWidth autoFocus name="email"
                     error={error}
                     value={inputValue}
                     onChange={handleChange} />
