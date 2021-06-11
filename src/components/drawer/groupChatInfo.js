@@ -10,6 +10,7 @@ import GroupActions from '@/redux/group'
 import InviteDialog from './inviteMember'
 import ModifyInfoDialog from './modifyInfo'
 import BlackListDialog from './blackList'
+import WebIM from '../../common/WebIM';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -173,10 +174,17 @@ function GroupChatInfo({ onDissolve }) {
         dispatch(GroupMemberActions.getGroupBlackListAsync(currentGroup))
         setShowBlackList(true)
     }
-    const handleDissolveClick = () => {
-        dispatch(GroupActions.dissolveGroupAsync({
-            groupId: groupInfo.id, groupName: groupInfo.name
-        }))
+    const handleDissolveClick = (type) => {
+        if (type === 'dissolve') {
+            dispatch(GroupActions.dissolveGroupAsync({
+                groupId: groupInfo.id, groupName: groupInfo.name
+            }))
+        } else if (type === 'quit') {
+            dispatch(GroupMemberActions.quitGroupAsync({
+                groupId: currentGroup, username: WebIM.conn.context.userId
+            }))
+        }
+
         dispatch(SessionActions.deleteSession(currentGroup))
         dispatch(SessionActions.setCurrentSession(sessionList[0].sessionId))
         onDissolve()
@@ -205,7 +213,7 @@ function GroupChatInfo({ onDissolve }) {
                         {i18next.t('Blacklist')}
                     </Typography>
                 </MenuItem>}
-                <MenuItem onClick={handleDissolveClick}>
+                <MenuItem onClick={() => { handleDissolveClick(myRole === 'owner' ? 'dissolve' : 'quit') }}>
                     <Typography variant="inherit" noWrap>
                         {myRole === 'owner' ? i18next.t('Dissolve Group') : i18next.t('Quit Group')}
                     </Typography>

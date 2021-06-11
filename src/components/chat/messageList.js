@@ -66,6 +66,7 @@ function MessageList({ messageList }) {
 
     const handleScroll = (e) => {
         if (e.target.scrollTop === 0 && !isLoaded) {
+            debugger
             setTimeout(() => {
                 const offset = messageList.length
                 dispatch(MessageActions.fetchMessage(to, chatType, offset, (res) => {

@@ -6,6 +6,7 @@ import CommonActions from '@/redux/common'
 import { message } from '@/components/common/Alert'
 const { Types, Creators } = createActions({
     updateGroup: ['groups'],
+    deleteGroup: ['groupId'],
     dissolveGroup: ['group'],
     updateGroupInfo: ['info'],
     getGroupInfo: ['groupInfo'],
@@ -181,6 +182,15 @@ export const deleteMember = (state, { groupId, userId }) => {
     })
     return state.setIn(['byId', groupId, 'info', 'affiliations'], affiliations)
 }
+
+export const deleteGroup = (state, { groupId }) => {
+    const byId = state.getIn(['byId']).without(groupId)
+    const names = []
+    _.forEach(byId, (v, k) => {
+        names.push(v.groupName + '_#-#_' + v.groupId)
+    })
+    return state.merge({ byId, names })
+}
 /* ------------- Initial State ------------- */
 
 export const INITIAL_STATE = Immutable({
@@ -197,7 +207,8 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.GET_GROUP_INFO]: getGroupInfo,
     [Types.UPDATE_GROUP_MEMBER_INFO]: updateGroupMemberInfo,
     [Types.CHANGE_MEMBER_ROLE]: changeMemberRole,
-    [Types.DELETE_MEMBER]: deleteMember
+    [Types.DELETE_MEMBER]: deleteMember,
+    [Types.DELETE_GROUP]: deleteGroup,
 })
 
 

@@ -65,6 +65,7 @@
         "Allow members to invite": "Allow members to invite",
         "Able": "Able",
         "Disable": "Disable",
-        "Block group message": "Block group message"
+        "Block group message": "Block group message",
+        "Delete Friend": "Delete Friend"
     }
 }

@@ -285,7 +285,7 @@ function ProminentAppBar(props) {
     }
 
     const handleLogout = () => {
-        dispatch(LoginActions.logout())
+        dispatch(LoginActions.logoutAsync())
     }
 
     function renderSessionInfoMenu() {

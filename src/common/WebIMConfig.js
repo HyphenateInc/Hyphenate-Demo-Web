@@ -2,7 +2,7 @@ const config = {
     /*
      * Application AppKey
      */
-    appkey: 'easemob-demo#chatdemoui',
+    appkey: 'easemob-demo#easeim',
     /*
      * Application Host
      */

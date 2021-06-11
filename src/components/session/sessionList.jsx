@@ -174,7 +174,7 @@ export default function SessionList(props) {
         if (!currentSession && renderSessionList[0]) {
             props.onClickItem(renderSessionList[0])
         }
-    }, [])
+    }, [renderSessionList, currentSession, props])
     return (
         <List dense className={classes.root}>
             {renderSessionList.map((session, index) => {

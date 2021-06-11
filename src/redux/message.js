@@ -170,7 +170,7 @@ const { Types, Creators } = createActions({
                     dispatch(Creators.deleteMessage(id))
                 },
                 fail: (err) => {
-                    message.error('撤回失败')
+                    message.error('recall fail')
                 }
             })
         }

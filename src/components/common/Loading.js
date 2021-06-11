@@ -17,9 +17,6 @@ export default function Loading({ show }) {
         // setOpen(false);
     };
 
-    useEffect(() => {
-    }, [show])
-
     return (
         <div>
             <Backdrop className={classes.backdrop} open={show} onClick={handleClose}>

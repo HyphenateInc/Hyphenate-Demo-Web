@@ -11,6 +11,7 @@ const { Types, Creators } = createActions({
     setLoginInfo: ['username', 'password', 'token'],
     setLoading: ['fetching'],
     setUserInfo: ['info'],
+    logout: [],
     // async
     login: (username, password) => {
         return (dispatch, getState) => {
@@ -57,10 +58,11 @@ const { Types, Creators } = createActions({
         }
     },
 
-    logout: () => {
+    logoutAsync: () => {
         return (dispatch, state) => {
             WebIM.conn.close('logout')
             history.push('/login')
+            dispatch(Creators.logout())
         }
     },
 
@@ -125,10 +127,15 @@ export const setUserInfo = (state, { info }) => {
     return state.setIn(['info'], info)
 }
 
+export const logout = (state = INITIAL_STATE) => {
+    return state.merge({ username: null, password: null, token: null, isLogin: false })
+}
+
 export const loginReducer = createReducer(INITIAL_STATE, {
     [Types.SET_LOGIN_INFO]: setLoginInfo,
     [Types.SET_LOADING]: setLoading,
-    [Types.SET_USER_INFO]: setUserInfo
+    [Types.SET_USER_INFO]: setUserInfo,
+    [Types.LOGOUT]: logout
 })
 
 export default Creators

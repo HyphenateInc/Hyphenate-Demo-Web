@@ -20,7 +20,8 @@ const sessionType = {
 WebIM.conn.listen({
     // success connect
     onOpened: msg => {
-        const userName = store.getState().login.username
+        console.log('onOpened', msg)
+        const userName = WebIM.conn.context.userId//store.getState().login.username
         // init DB
         AppDB.init(userName)
         // get session list
@@ -164,7 +165,7 @@ WebIM.conn.listen({
     },
     onClosed: msg => {
         console.warn('onClosed', msg)
-        history.push('/login')
-        store.dispatch(CommonActions.setLoading(false))
+        // history.push('/login')
+        // store.dispatch(CommonActions.setLoading(false))
     },
 })

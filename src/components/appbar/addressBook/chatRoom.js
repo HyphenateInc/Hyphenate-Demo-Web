@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => {
 export default function ChatRoomList({ open, onClose }) {
     const classes = useStyles();
     const dispatch = useDispatch()
-    const sessionList = useSelector(state => state.session.sessionList.asMutable())
-    const chatRoomList = useSelector(state => state.chatRoom.names)
+    const sessionList = useSelector(state => state.session.sessionList.asMutable()) || []
+    const chatRoomList = useSelector(state => state.chatRoom.names) || []
     const handleClose = () => {
         onClose()
     }

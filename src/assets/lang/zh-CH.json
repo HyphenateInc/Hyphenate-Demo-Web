@@ -71,6 +71,7 @@
         "Allow members to invite": "允许成员邀请",
         "Able": "允许",
         "Disable": "不允许",
-        "Block group message": "群组禁言"
+        "Block group message": "群组禁言",
+        "Delete Friend": "删除好友"
     }
 }

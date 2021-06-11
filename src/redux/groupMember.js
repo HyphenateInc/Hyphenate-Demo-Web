@@ -32,7 +32,7 @@ const { Types, Creators } = createActions({
         }
     },
 
-    quitGroupAsync: (groupId, username) => {
+    quitGroupAsync: ({ groupId, username }) => {
         return (dispatch, getState) => {
             WebIM.conn.quitGroup({
                 groupId,
