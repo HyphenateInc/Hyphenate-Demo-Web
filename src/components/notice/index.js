@@ -66,6 +66,7 @@ function Notice() {
         else if (msg.type === 'invite') {
             dispatch(NoticeActions.agreeInviteIntoGroup(msg.gid, {
                 groupId: msg.gid,
+                id: msg.id,
                 invitee: WebIM.conn.context.userId,
                 success: () => { },
                 error: () => { }
@@ -82,6 +83,7 @@ function Notice() {
         else if (msg.type === 'invite') {
             dispatch(NoticeActions.rejectInviteIntoGroup(msg.gid, {
                 groupId: msg.gid,
+                id: msg.id,
                 invitee: WebIM.conn.context.userId,
                 success: () => { },
                 error: () => { }

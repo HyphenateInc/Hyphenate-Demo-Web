@@ -100,14 +100,14 @@ WebIM.conn.listen({
     onContactDeleted: function (msg) {
         store.dispatch(RosterActions.getContacts())
         store.dispatch(MessageActions.clearUnread('chat', msg.from))
-        message.warning(msg.from + '' + i18next.t('Deleted'))
+        message.error(msg.from + '' + i18next.t('Deleted'))
     },
     onContactAdded: function (msg) {
         store.dispatch(RosterActions.getContacts())
-        message.warning(msg.from + '' + i18next.t('subscribed'))
+        message.info(msg.from + '' + i18next.t('subscribed'))
     },
     onContactRefuse: function (msg) {
-        message.warning(msg.from + '' + i18next.t('refuse'))
+        message.error(msg.from + '' + i18next.t('refuse'))
     },
     onContactAgreed: function (msg) {
         message.success(msg.from + '' + i18next.t('agreed'))
@@ -135,10 +135,10 @@ WebIM.conn.listen({
                     i18next.t('admin')} .`
                 )
                 store.dispatch(GroupActions.getGroups())
-                store.dispatch(MessageActions.clearUnread('groupchat', msg.gid))
+                store.dispatch(MessageActions.clearUnread('groupChat', msg.gid))
+                store.dispatch(SessionActions.deleteSession(msg.gid))
                 break
             case 'invite': //nvite you to group
-                debugger
                 msg.status = ''
                 store.dispatch(NoticeActions.addGroupRequest(msg))
                 break
@@ -162,29 +162,29 @@ WebIM.conn.listen({
                 message.error(`${i18next.t('joinGroup')}${i18next.t('failed')}`)
                 break
             case 'memberJoinPublicGroupSuccess':
-                message.success(`${msg.from}${i18next.t('join')}${i18next.t('group')}${msg.gid}${i18next.t('successfully')}`)
+                message.success(`${msg.from}${i18next.t('join')}${i18next.t('group')} ${msg.gid} ${i18next.t('successfully')}`)
                 store.dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: msg.gid }))
                 break
             case 'memberJoinChatRoomSuccess':
-                message.success(`${msg.from}${i18next.t('join')}${i18next.t('chatroom')}${msg.gid}${i18next.t('successfully')}`)
+                message.info(`${msg.from} ${i18next.t('join')} ${i18next.t('chatroom')} ${msg.gid} ${i18next.t('successfully')}`)
                 break
             case 'leaveChatRoom': // Leave the chat room
-                message.warning(`${msg.from} left the chatroom: ${msg.gid}`)
+                message.info(`${msg.from} left the chatroom: ${msg.gid}`)
                 break
             case 'addMute':
-                message.warning('you was muted')
+                message.info('you was muted')
                 break
             case 'removeMute':
-                message.success('you was unmuted')
+                message.info('you was unmuted')
                 break
             case 'addAdmin':
-                message.success('you were set to be an admin')
+                message.info('you were set to be an admin')
                 break
             case 'removeAdmin':
-                message.success('your admin has been canceled')
+                message.info('your admin has been canceled')
                 break
             case 'changeOwner':
-                message.success('You`ve become group managerd')
+                message.info('You`ve become group managerd')
                 break
             default:
                 break
