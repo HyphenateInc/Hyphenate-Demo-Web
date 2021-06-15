@@ -1,6 +1,6 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Switch, Menu, MenuItem, Box, Icon, Typography } from '@material-ui/core';
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Switch, Menu, MenuItem, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx';
 import i18next from 'i18next';
@@ -181,8 +181,8 @@ function GroupChatInfo({ onDissolve }) {
             }))
         }
 
-        dispatch(SessionActions.deleteSession(currentGroup))
-        dispatch(SessionActions.setCurrentSession(sessionList[0].sessionId))
+        dispatch(SessionActions.deleteSession(groupInfo.id))
+        // dispatch(SessionActions.setCurrentSession(sessionList[0].sessionId))
         onDissolve()
     }
     function renderMoreMenu() {
@@ -254,7 +254,7 @@ function GroupChatInfo({ onDissolve }) {
                     </div>
                 </div>
                 <div className={classes.nembers}>
-                    {i18next.t('Numbers') + `(${groupInfo.affiliations_count})`}
+                    {i18next.t('Numbers') + `(${groupInfo.affiliations_count || 1})`}
                 </div>
             </main>
             <div className={classes.listBox}>
@@ -294,4 +294,4 @@ function GroupChatInfo({ onDissolve }) {
     )
 }
 
-export default GroupChatInfo
+export default memo(GroupChatInfo)

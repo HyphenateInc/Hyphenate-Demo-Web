@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
     aside: {
         width: '30vw',
+        overflowY: 'auto'
     },
     article: {
         flex: 1

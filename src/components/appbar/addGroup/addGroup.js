@@ -13,9 +13,10 @@ const useStyles = makeStyles((theme) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            minWidth: '40vw',
+            width: '100%',
             paddingBottom: theme.spacing(4),
-            margin: '16px 24px'
+            padding: '16px 24px',
+            boxSizing: 'border-box'
         },
         inputLabel: {
             marginBottom: theme.spacing(4),

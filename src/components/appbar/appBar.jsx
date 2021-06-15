@@ -362,7 +362,7 @@ function ProminentAppBar(props) {
     return (
         <div className={classes.root}>
             <Box position="static" className={classes.leftBar}
-                style={{ display: showLeft ? 'flex' : 'none', width: isSmallScreen ? '100vw' : '30vw' }}>
+                style={{ display: showLeft ? 'flex' : 'none', width: isSmallScreen ? '100vw' : '30vw', maxWidth: isSmallScreen ? '100vw' : '400px' }}>
                 <img src={agora} alt="agora" />
                 <Toolbar className={classes.toolbar}>
                     <IconButton
@@ -388,27 +388,15 @@ function ProminentAppBar(props) {
                     {to}
                 </Typography>
                 <Toolbar className={classes.toolbar}>
-                    <SearchInput
+                    {/* <SearchInput
                         style={{ display: showSearch ? 'flex' : 'none' }}
                         onChange={handleSearchChange}
                         onBlur={handleSearchBlur}
                     />
 
                     <IconButton style={{ display: !showSearch ? 'block' : 'none' }}
-                        onClick={() => { setShowSearch(true) }} className="iconfont icon-sousuo icon"></IconButton>
-                    {/* <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <IconButton className="iconfont icon-sousuo icon"></IconButton>
-                        </div>
-                        <InputBase
-                            placeholder=""
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div> */}
+                        onClick={() => { setShowSearch(true) }} className="iconfont icon-sousuo icon"></IconButton> */}
+
                     <IconButton
                         onClick={handleSessionInfoClick}
                         className="iconfont icon-hanbaobao icon"

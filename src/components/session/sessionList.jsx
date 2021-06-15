@@ -19,7 +19,7 @@ import i18next from 'i18next';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        height: '100%',
+        minHeight: '100%',
         backgroundColor: 'rgba(206, 211, 217, 0.3)',
         margin: 0,
         padding: 0
@@ -182,7 +182,7 @@ export default function SessionList(props) {
                 let sessionName = session.sessionId // TODO: user info
                 if (session.sessionType === 'groupChat') {
                     avatarSrc = groupIcon
-                    sessionName = groupbyId?.[session.sessionId]?.groupName
+                    sessionName = groupbyId?.[session.sessionId]?.groupName || session.sessionId
                 }
                 else if (session.sessionType === 'chatRoom') {
                     avatarSrc = chatRoomIcon
