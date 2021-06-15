@@ -159,7 +159,9 @@ export default function AddressBookDialog(props) {
                                 </ListItemAvatar>
                                 <Box>
                                     <Typography className={classes.itemName}>
-                                        {byName[userId]?.info?.nickname || userId}</Typography>
+                                        {userId}
+                                        {/* Next issue use nickname {byName[userId]?.info?.nickname || userId} */}
+                                    </Typography>
                                 </Box>
                             </Box>
                         </ListItem>

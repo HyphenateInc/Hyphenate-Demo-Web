@@ -247,7 +247,7 @@ function CreateGroup(props) {
                 public: step2state.checkedA,
                 approval: true,  // Need approval
                 allowinvites: step2state.checkedB, // True: allow group members to invite others to join the group. False: allow group members to invite others to join the group only if group manager is allowed (Note that public groups (public: true) do not allow group members to invite others to join the group)
-                inviteNeedConfirm: false  // whether the invitee needs to confirm.
+                inviteNeedConfirm: true  // whether the invitee needs to confirm.
             },
             success(res) {
                 serStep2state({ checkedA: true, checkedB: true })
