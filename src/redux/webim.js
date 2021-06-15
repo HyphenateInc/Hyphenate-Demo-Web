@@ -99,7 +99,8 @@ WebIM.conn.listen({
     },
     onContactDeleted: function (msg) {
         store.dispatch(RosterActions.getContacts())
-        store.dispatch(MessageActions.clearUnread('chat', msg.from))
+        store.dispatch(MessageActions.clearUnread('singleChat', msg.from))
+        store.dispatch(SessionActions.deleteSession(msg.from))
         message.error(msg.from + '' + i18next.t('Deleted'))
     },
     onContactAdded: function (msg) {
@@ -122,7 +123,8 @@ WebIM.conn.listen({
             case 'deleteGroupChat':
                 message.error(`group${msg.gid} was destroyed.`)
                 store.dispatch(GroupActions.getGroups())
-                store.dispatch(MessageActions.clearUnread('groupchat', msg.gid))
+                store.dispatch(MessageActions.clearUnread('groupChat', msg.gid))
+                store.dispatch(SessionActions.deleteSession(msg.gid))
                 break
             case 'leaveGroup': // 某人离开群
                 message.error(
