@@ -13,7 +13,6 @@ const { Types, Creators } = createActions({
     getSessionList: () => {
         return (dispatch, getState) => {
             AppDB.getSessionList().then((res) => {
-                console.log('获取会话列表', res)
                 dispatch(Creators.setSessionList(res))
             })
         }

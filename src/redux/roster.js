@@ -18,7 +18,6 @@ const { Types, Creators } = createActions({
                         roster.forEach((item) => {
                             item.info = infos[item.name]
                         })
-                        console.log('---- roster--- ', roster)
                         dispatch(Creators.updateRoster(roster))
                         dispatch(CommonActions.setLoading(false))
                     })

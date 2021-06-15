@@ -99,10 +99,6 @@ function GroupChatInfo({ onDissolve }) {
             myRole = element.role
         }
     });
-    console.log('memberInfo', memberInfo)
-    console.log('groupMember', groupMember)
-    console.log('myUserName', myUserName)
-    console.log('myRole', myRole)
 
     function renderTools(member) {
         const memberRole = member.role

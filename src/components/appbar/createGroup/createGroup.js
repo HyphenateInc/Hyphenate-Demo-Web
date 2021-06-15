@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => {
             height: '30px',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '16px'
+            padding: '6px 12px'
         },
 
         step2Content: {
@@ -139,7 +139,6 @@ function CreateGroup(props) {
 
     const [renderList, setRenderList] = useState([...friends])
     const handleSearchChange = _.debounce((e) => {
-        console.log('----friends-----', friends)
         if (e.target.value === '') {
             return setRenderList([...friends])
         }

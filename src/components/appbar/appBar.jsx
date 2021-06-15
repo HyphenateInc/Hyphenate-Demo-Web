@@ -380,7 +380,7 @@ function ProminentAppBar(props) {
                 style={{ display: showRight ? 'flex' : 'none' }}>
                 <IconButton
                     onClick={onGoBack}
-                    style={{ display: isSmallScreen ? 'flex' : 'none' }}>
+                    style={{ display: isSmallScreen ? 'flex' : 'none', color: '#bdbdbd' }}>
                     {'<'}
                 </IconButton>
 

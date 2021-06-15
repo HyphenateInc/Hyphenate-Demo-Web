@@ -5,6 +5,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import { emoji } from '@/common/emoji'
 import { renderTime } from '@/utils'
+import MessageStatus from '@/components/common/messageStatus'
 const useStyles = makeStyles((theme) => ({
     pulldownListItem: {
         display: 'flex',
@@ -82,6 +83,7 @@ function TextMessage({ message, onRecallMessage }) {
                 rnTxt.push(
                     <img
                         key={v}
+                        alt={v}
                         src={require(`../../../assets/faces/${v}`).default}
                         width={20}
                         height={20}
@@ -105,7 +107,9 @@ function TextMessage({ message, onRecallMessage }) {
             <div className={classes.time}>
                 {renderTime(message.time)}
             </div>
+            <MessageStatus status={message.status} />
             {message.status === 'read' ? <div className={classes.read}>{i18next.t('Read')}</div> : null}
+
             {message.bySelf ?
                 <Menu
                     keepMounted

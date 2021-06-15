@@ -1,40 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
+import { Button, TextField, Link, Grid, Box, FormControl, InputLabel, Input, IconButton, InputAdornment } from '@material-ui/core';
 import i18next from "i18next";
 import { message } from '@/components/common/Alert'
 import LoginActions from '@/redux/login'
 import CommonActions from '@/redux/common'
-import { history } from '@/common/routes'
 import useStyles from './style'
 import agora from '@/assets/images/agora@2x.png'
 
-import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
+
+// import Sending from '@/components/common/sendingStatus'
 const BaseInput = withStyles({
     "root": {
-        color: 'red',
+        color: '#00BA6E',
     },
 })(TextField);
 
 function Login(props) {
-    // console.log('login 刷新了', history)
-    // const num = useSelector(state => state.num);
     const dispatch = useDispatch();
-
     const classes = useStyles(props);
 
     useEffect(() => {
@@ -71,10 +58,8 @@ function Login(props) {
         if (!values.userName || !values.password) {
             return message.error(i18next.t('The user name or password cannot be empty'))
         }
-
         dispatch(LoginActions.login(values.userName, values.password))
         dispatch(CommonActions.setLoading(true))
-
     }
     return (
         <div className={classes.container} >
@@ -88,6 +73,9 @@ function Login(props) {
                     </Box>
                     <form className={classes.form} >
                         <BaseInput
+                            InputLabelProps={{
+                                style: { color: '#00BA6E' }
+                            }}
                             autoComplete="off"
                             inputProps={{ className: classes.input }}
                             margin="normal"
@@ -100,7 +88,7 @@ function Login(props) {
                             onChange={handleChange('userName')}
                         />
                         <FormControl className={classes.password}>
-                            <InputLabel htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
+                            <InputLabel style={{ color: '#00BA6E' }} htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
                             <Input
                                 autoComplete="off"
                                 className={classes.input}

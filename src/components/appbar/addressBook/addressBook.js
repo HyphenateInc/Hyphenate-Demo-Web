@@ -69,10 +69,7 @@ export default function AddressBookDialog(props) {
     const friends = roster.friends || []
     const byName = roster.byName || {}
     const sessionList = useSelector(state => state.session.sessionList.asMutable())
-    const groupList = useSelector(state => state.group.group.names)
-    const chatRoomList = useSelector(state => state.chatRoom.names)
     const handleClick = (itemData) => {
-        console.log('itemData', itemData)
         if (typeof itemData === 'string') {
             const index = _.findIndex(sessionList, item => item.sessionId === itemData);
             if (index < 0) {
@@ -124,7 +121,7 @@ export default function AddressBookDialog(props) {
                         </ListItemAvatar>
                         <Box className={classes.textBox}>
                             <Typography className={classes.itemName}>{i18next.t('Group')}</Typography>
-                            <Typography className={classes.itemName}>></Typography>
+                            <Typography className={classes.itemName} style={{ color: "rgba(0, 0, 0, 0.38)" }}>{'>'}</Typography>
                         </Box>
                     </Box>
                 </ListItem>
@@ -141,7 +138,7 @@ export default function AddressBookDialog(props) {
                         </ListItemAvatar>
                         <Box className={classes.textBox}>
                             <Typography className={classes.itemName}>{i18next.t('Chat Room')}</Typography>
-                            <Typography className={classes.itemName}>></Typography>
+                            <Typography className={classes.itemName} style={{ color: "rgba(0, 0, 0, 0.38)" }}>{'>'}</Typography>
                         </Box>
                     </Box>
                 </ListItem>

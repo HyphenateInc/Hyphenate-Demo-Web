@@ -172,10 +172,10 @@ WebIM.conn.listen({
                 message.info(`${msg.from} left the chatroom: ${msg.gid}`)
                 break
             case 'addMute':
-                message.info('you was muted')
+                message.info(`you was muted by ${message.from} in group: ${message.gid}`)
                 break
             case 'removeMute':
-                message.info('you was unmuted')
+                message.info(`you was unmuted by ${message.from} in group: ${message.gid}`)
                 break
             case 'addAdmin':
                 message.info('you were set to be an admin')

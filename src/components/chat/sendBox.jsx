@@ -117,7 +117,6 @@ function SendBox() {
     }
     const handleFileChange = (e) => {
         let file = WebIM.utils.getFileUrl(e.target)
-        console.log(file)
         if (!file.filename) {
             return false
         }
@@ -125,7 +124,6 @@ function SendBox() {
     }
     const handleImageChange = (e) => {
         let file = WebIM.utils.getFileUrl(e.target)
-        console.log(file)
         if (!file.filename) {
             return false
         }

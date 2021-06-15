@@ -40,13 +40,6 @@ function MessageList({ messageList }) {
     const [isPullingDown, setIsPullingDown] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     let _not_scroll_bottom = false
-    // useEffect(() => {
-    //     document.oncontextmenu = function (e) {
-    //         console.log('oncontextmenu', e);
-    //         e.stopPropagation()
-    //         return false
-    //     }
-    // }, [])
 
     useEffect(() => {
         if (!_not_scroll_bottom) {
@@ -59,7 +52,6 @@ function MessageList({ messageList }) {
     })
 
     const handleRecallMsg = useCallback((message) => {
-        console.log('handleRecallMsg', message)
         const { to, chatType } = message
         dispatch(MessageActions.recallMessage(to, chatType, message))
     }, [dispatch])

@@ -41,18 +41,13 @@ function Recorder2({ open, onClose }) {
         // audioSrc,
         timeslice: 1000, //（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
         startCallback: (e) => {
-            console.log("succ start", e)
             // startTime = new Date().getTime()
             startTime.current = new Date().getTime()
-            console.log('startTime', startTime)
         },
         pauseCallback: (e) => {
-            console.log("succ pause", e)
         },
         stopCallback: (e) => {
-            console.log("succ stop", e)
             let endTime = new Date().getTime()
-            console.log('endTime', endTime)
             const duration = (endTime - startTime.current) / 1000
             const uri = {
                 url: WebIM.utils.parseDownloadResponse.call(WebIM.conn, e),
@@ -67,7 +62,6 @@ function Recorder2({ open, onClose }) {
             onClose()
         },
         onRecordCallback: (e) => {
-            console.log("recording", e)
         },
         errorCallback: (err) => {
             console.log("error", err)

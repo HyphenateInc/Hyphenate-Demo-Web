@@ -46,7 +46,8 @@ const { Types, Creators } = createActions({
                 success: () => {
                     dispatch(Creators.updateMessageStatus(formatMsg, 'sent'))
                 },
-                fail: () => {
+                fail: (e) => {
+                    console.error("Send private text error", e);
                     dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
                 }
             })
@@ -209,9 +210,7 @@ const { Types, Creators } = createActions({
 /* ------------- Reducers ------------- */
 export const addMessage = (state, { message, messageType = 'txt' }) => {
     const rootState = store.getState()
-    // console.log('******* rootState ****', message)
     !message.status && (message = formatServerMessage(message, messageType)) //remote messages do not have a status field
-    console.log('格式化的消息', message)
     const username = WebIM.conn.context.userId//_.get(state, 'login.username', '')
     const { id, to, status } = message
     let { chatType } = message
