@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: props => props.bySelf ? '4px 0 4px 4px' : '0px 4px 4px 4px',
         padding: '15px',
         maxWidth: '65%',
-        overflowWrap: 'break-word'
+        overflowWrap: 'break-word',
+        wordBreak: 'break-all'
     },
     time: {
         position: 'absolute',

@@ -252,7 +252,6 @@ export const addMessage = (state, { message, messageType = 'txt' }) => {
     })
 
     !isPushed && chatData.push(_message)
-
     // add a message to db, if by myselt, isUnread equals 0
     !isPushed && AppDB.addMessage(_message, !bySelf ? 1 : 0)
 
@@ -303,7 +302,10 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
             toJid: mid
         }
         messages.splice(messages.indexOf(found), 1, msg)
-        AppDB.updateMessageStatus(id, status).then(res => { })
+        setTimeout(() => {
+            AppDB.updateMessageStatus(id, status).then(res => { })
+        }, 1000)
+
         return state.setIn([chatType, chatId], messages)
     }
     return state
@@ -361,7 +363,8 @@ export const updateMessageMid = (state, { id, mid }) => {
         messages.splice(messages.indexOf(found), 1, msg)
         state = state.setIn([chatType, chatId], messages)
     }
-    AppDB.updateMessageMid(mid, Number(id))
+
+    setTimeout(() => { AppDB.updateMessageMid(mid, Number(id)) }, 1000)
     return state.setIn(['byMid', mid], { id })
 }
 

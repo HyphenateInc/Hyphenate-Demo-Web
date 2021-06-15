@@ -71,12 +71,12 @@ function Login(props) {
                     <Box className={classes.logoContainer}>
                         <img src={agora} alt='agora' />
                     </Box>
-                    <form className={classes.form} >
+                    <form className={classes.form} autoComplete="off">
                         <BaseInput
                             InputLabelProps={{
                                 style: { color: '#00BA6E' }
                             }}
-                            autoComplete="off"
+                            className={classes.input}
                             inputProps={{ className: classes.input }}
                             margin="normal"
                             value={values.userName}
@@ -90,7 +90,6 @@ function Login(props) {
                         <FormControl className={classes.password}>
                             <InputLabel style={{ color: '#00BA6E' }} htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
                             <Input
-                                autoComplete="off"
                                 className={classes.input}
                                 id="standard-adornment-password"
                                 type={values.showPassword ? 'text' : 'password'}
