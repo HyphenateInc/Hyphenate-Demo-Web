@@ -51,7 +51,9 @@ export const deleteSession = (state, { sessionId }) => {
     sessionList = sessionList.filter((item) => {
         return item.sessionId !== sessionId
     })
-    return state.setIn(['sessionList'], sessionList)
+    state = state.setIn(['currentSession'], '')
+    state = state.setIn(['sessionList'], sessionList)
+    return state
 }
 
 /* ------------- Hookup Reducers To Types ------------- */
