@@ -197,7 +197,7 @@ export default function SessionList(props) {
                     sessionName = i18next.t('notice')// session.sessionId === 'notice'
                 }
                 return (
-                    <ListItem key={session.sessionId + index}
+                    <ListItem key={session.sessionId + session.sessionType}
                         selected={currentSessionIndex === index}
                         onClick={(event) => handleListItemClick(event, index, session)}
                         button className={classes.listItem}>
