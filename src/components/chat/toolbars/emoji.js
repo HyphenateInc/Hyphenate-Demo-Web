@@ -53,6 +53,7 @@ function Emoji({ anchorEl, onClose, onSelected }) {
 
     const handleEmojiClick = (e) => {
         const emoji = e.target.alt
+        if (!emoji) return
         onSelected(emoji)
     }
     return (
