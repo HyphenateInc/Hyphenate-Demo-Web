@@ -254,7 +254,7 @@ function GroupChatInfo({ onDissolve }) {
                     </div>
                 </div>
                 <div className={classes.nembers}>
-                    {i18next.t('Numbers') + `(${groupInfo.affiliations_count || 1})`}
+                    {i18next.t('Numbers') + `(${groupMember.length || 1})`}
                 </div>
             </main>
             <div className={classes.listBox}>

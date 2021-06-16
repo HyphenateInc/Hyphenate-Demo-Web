@@ -166,6 +166,7 @@ WebIM.conn.listen({
             case 'memberJoinPublicGroupSuccess':
                 message.success(`${msg.from}${i18next.t('join')}${i18next.t('group')} ${msg.gid} ${i18next.t('successfully')}`)
                 store.dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: msg.gid }))
+                store.dispatch(GroupActions.getGroupInfoAsync(msg.gid))
                 break
             case 'memberJoinChatRoomSuccess':
                 message.info(`${msg.from} ${i18next.t('join')} ${i18next.t('chatroom')} ${msg.gid} ${i18next.t('successfully')}`)
@@ -181,12 +182,15 @@ WebIM.conn.listen({
                 break
             case 'addAdmin':
                 message.info('you were set to be an admin')
+                store.dispatch(GroupActions.getGroupInfoAsync(msg.gid))
                 break
             case 'removeAdmin':
                 message.info('your admin has been canceled')
+                store.dispatch(GroupActions.getGroupInfoAsync(msg.gid))
                 break
             case 'changeOwner':
                 message.info('You`ve become group managerd')
+                store.dispatch(GroupActions.getGroupInfoAsync(msg.gid))
                 break
             default:
                 break
