@@ -99,8 +99,17 @@ function Notice() {
             <div>
                 {notices.length ? notices.map((msg, index) => {
                     const noticeType = (msg.type === 'joinGroupNotifications' || msg.type === 'invite') ? 'groupRequest' : 'friendRequest'
-                    const requestmsg = noticeType === 'friendRequest' ? msg.status :
-                        `${msg.from} invite you join group ${msg.gid}`
+                    let requestmsg
+                    if (msg.type === 'joinGroupNotifications') {
+                        requestmsg = 'Request to join the group:' + msg.gid
+                    }
+                    else if (msg.type === 'invite') {
+                        requestmsg = `${msg.from} invite you join group ${msg.gid}`
+                    }
+                    else {
+                        requestmsg = msg?.status
+                    }
+
                     return <div className={classes.itemBox} key={msg.from + index}>
                         <div className={classes.header}>
                             {noticeType === 'friendRequest' ? 'Request add friend' :
