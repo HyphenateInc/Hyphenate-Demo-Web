@@ -205,6 +205,26 @@ const { Types, Creators } = createActions({
             AppDB.clearMessage(chatType, id).then(res => { })
         }
     },
+
+    addAudioMessage: (message, bodyType) => {
+        return (dispatch, getState) => {
+            let options = {
+                url: message.url,
+                headers: {
+                    Accept: 'audio/mp3'
+                },
+                onFileDownloadComplete: function (response) {
+                    let objectUrl = WebIM.utils.parseDownloadResponse.call(WebIM.conn, response)
+                    message.audioSrcUrl = message.url
+                    message.url = objectUrl
+                    dispatch(Creators.addMessage(message, bodyType))
+                },
+                onFileDownloadError: function () {
+                }
+            }
+            WebIM.utils.download.call(WebIM.conn, options)
+        }
+    },
 })
 
 /* ------------- Reducers ------------- */

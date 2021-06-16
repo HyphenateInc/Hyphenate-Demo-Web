@@ -65,14 +65,13 @@ WebIM.conn.listen({
         const { type, from, to } = message
         const sessionId = type === 'chat' ? from : to
         store.dispatch(MessageActions.addMessage(message, 'img'))
-        // type === 'chat' && store.dispatch(MessageActions.sendRead(message))
         store.dispatch(SessionActions.topSession(sessionId, sessionType[type]))
     },
     onAudioMessage: message => {
         console.log('onAudioMessage', message)
         const { type, from, to } = message
         const sessionId = type === 'chat' ? from : to
-        store.dispatch(MessageActions.addMessage(message, 'audio'))
+        store.dispatch(MessageActions.addAudioMessage(message, 'audio'))
         store.dispatch(SessionActions.topSession(sessionId, sessionType[type]))
     },
 
