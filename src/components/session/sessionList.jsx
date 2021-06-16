@@ -123,7 +123,11 @@ export default function SessionList(props) {
                     session.unreadNum = noticeUnreadNum
                     if (notices[notices.length - 1].type === 'joinGroupNotifications') {
                         msg = 'Request to join the group:' + notices[notices.length - 1].gid
-                    } else {
+                    }
+                    else if (notices[notices.length - 1].type === 'invite') {
+                        msg = `${notices[notices.length - 1].from} invite you join group ${notices[notices.length - 1].gid}`
+                    }
+                    else {
                         msg = notices[notices.length - 1]?.status
                     }
                     session.lastMessage = {
