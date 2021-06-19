@@ -246,7 +246,18 @@ const { Types, Creators } = createActions({
             })
         }
     },
-
+    getGroupAdminAsync: groupId => {
+        return (dispatch, getState) => {
+            WebIM.conn.getGroupAdmin({
+                groupId,
+                success: response => {
+                    const admins = response.data
+                    if (admins) dispatch(Creators.setAdmins(groupId, admins))
+                },
+                error: e => console.log(`an error found while invoking resultful getGroupAdmin: ${e}`)
+            })
+        }
+    }
 })
 
 /* ------------- Initial State ------------- */

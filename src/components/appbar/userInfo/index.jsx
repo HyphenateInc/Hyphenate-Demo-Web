@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: theme.spacing(70),
+            width: theme.spacing(100),
             paddingBottom: theme.spacing(4),
             margin: "16px 24px",
         },
@@ -92,7 +92,6 @@ export default function UserInfo({ open, onClose }) {
                     </span>
                     <TextField
                         style={{ flex: '1' }}
-                        id="outlined-basic"
                         variant="outlined"
                         autoFocus
                         name="userName"

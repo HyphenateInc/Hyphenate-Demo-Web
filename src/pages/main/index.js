@@ -85,7 +85,7 @@ function Main(props) {
                     onGoBack={handleGoBack} />
             </header>
             <main className={classes.content}>
-                <aside className={classes.aside} style={{ display: showLeft ? 'block' : 'none', width: isSmallScreen ? '100vw' : '30vw', maxWidth: isSmallScreen ? '100vw' : '400px' }}>
+                <aside className={classes.aside} style={{ display: showLeft ? 'block' : 'none', width: isSmallScreen ? '100vw' : '26vw', maxWidth: isSmallScreen ? '100vw' : '400px' }}>
                     <SessionList onClickItem={handleClickItem} />
                 </aside>
 

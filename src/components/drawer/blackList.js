@@ -11,7 +11,7 @@ import GroupActions from '@/redux/group'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
-            width: theme.spacing(86),
+            width: theme.spacing(100),
             minHeight: '35vh',
             margin: 0,
             padding: 0,

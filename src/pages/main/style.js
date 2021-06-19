@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         height: 'calc(100% - 6.67vh)'
     },
     aside: {
-        width: '30vw',
+        width: '26vw',
         overflowY: 'auto'
     },
     article: {

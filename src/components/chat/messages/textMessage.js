@@ -16,6 +16,18 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: props =>
             props.bySelf ? 'row-reverse' : 'row',
     },
+    userName: {
+        padding: '0 10px 4px',
+        color: '#8797A4',
+        fontSize: '14px',
+        display: props => (props.chatType !== 'singleChat' && !props.bySelf) ? 'inline-block' : 'none',
+        textAlign: props => props.bySelf ? 'right' : 'left'
+    },
+    textBodyBox: {
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '65%',
+    },
     textBody: {
         display: 'flex',
         margin: props => props.bySelf ? '0 10px 26px 0' : '0 0 26px 10px',
@@ -26,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
         border: '1px solid #fff',
         borderRadius: props => props.bySelf ? '4px 0 4px 4px' : '0px 4px 4px 4px',
         padding: '15px',
-        maxWidth: '65%',
+        // maxWidth: '65%',
         overflowWrap: 'break-word',
         wordBreak: 'break-all'
     },
@@ -51,7 +63,7 @@ const initialState = {
     mouseY: null,
 };
 function TextMessage({ message, onRecallMessage }) {
-    const classes = useStyles({ bySelf: message.bySelf });
+    const classes = useStyles({ bySelf: message.bySelf, chatType: message.chatType });
     const [state, setState] = useState(initialState);
     const handleClick = (event) => {
         event.preventDefault();
@@ -101,14 +113,19 @@ function TextMessage({ message, onRecallMessage }) {
     }
     return (
         <li className={classes.pulldownListItem}>
-            <Avatar></Avatar>
-            <div className={classes.textBody} onContextMenu={handleClick}>
-                {renderTxt(message.body.msg)}
+            <div>
+                <Avatar></Avatar>
+            </div>
+            <div className={classes.textBodyBox}>
+                <span className={classes.userName}>{message.from}</span>
+                <div className={classes.textBody} onContextMenu={handleClick}>
+                    {renderTxt(message.body.msg)}
+                </div>
             </div>
             <div className={classes.time}>
                 {renderTime(message.time)}
             </div>
-            <MessageStatus status={message.status} />
+            <MessageStatus status={message.status} style={{ marginTop: message.chatType === 'singleChat' ? '0' : '22px' }} />
             {message.status === 'read' ? <div className={classes.read}>{i18next.t('Read')}</div> : null}
 
             {message.bySelf ?

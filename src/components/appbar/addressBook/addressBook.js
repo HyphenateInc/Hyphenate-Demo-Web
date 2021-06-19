@@ -18,7 +18,7 @@ import ChatRoomActions from '@/redux/chatRoom'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
-            width: '100%',
+            width: theme.spacing(100),
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => {
         },
         listItem: {
             height: theme.spacing(14),
-            width: theme.spacing(86),
+            width: theme.spacing(100),
             maxWidth: '100%',
             display: 'flex',
             alignItems: 'center',

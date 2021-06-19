@@ -87,6 +87,7 @@ function GroupChatInfo({ onDissolve }) {
     const memberInfo = useSelector(state => state.group?.group?.byId[currentGroup])?.memberInfo?.asMutable({ deep: true }) || {}
     const myUserName = useSelector(state => state.login.username)
     const mutedList = useSelector(state => state.group.groupMember?.[currentGroup]?.muted) || {}
+    const adminList = useSelector(state => state.group.groupMember?.[currentGroup]?.admins) || []
     let myRole = 'member'
 
     const [addEl, setAddEl] = useState(null)
@@ -94,14 +95,22 @@ function GroupChatInfo({ onDissolve }) {
     const [showModify, setShowModify] = useState(false)
     const [showBlackList, setShowBlackList] = useState(false)
     const sessionList = useSelector(state => state.session.sessionList) || []
+
+    if (groupInfo.owner === myUserName) {
+        myRole = 'owner'
+    } else if (adminList.includes(myUserName)) {
+        myRole = 'admin'
+    }
     groupMember.forEach(element => {
-        if (element.id === myUserName) {
-            myRole = element.role
+        if (adminList.includes(element.id)) {
+            element.role = 'admin'
         }
     });
 
+    console.log('-----adminList------', adminList, myRole)
     function renderTools(member) {
         const memberRole = member.role
+        console.log('memberRole', member)
         if (myRole === 'member') return null
         let RoleIcon = null
         let MuteIcon = null
@@ -140,7 +149,7 @@ function GroupChatInfo({ onDissolve }) {
                     className={clsx(classes.itemToolbtn, "iconfont icon-wujinyanzhuangtai")} />
             </Tooltip>
         }
-        if (myRole === 'owner') {
+        if (myRole === 'owner' || myRole === 'admin') {
             return (
                 <>
                     {RoleIcon}

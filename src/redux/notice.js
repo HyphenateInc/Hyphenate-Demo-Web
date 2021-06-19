@@ -81,7 +81,7 @@ export const addGroupRequest = (state, { msg }) => {
     const notices = state.getIn(['notices']).asMutable()
     msg.id = Date.now()
     msg.disabled = false
-    notices.push(msg)
+    notices.unshift(msg)
     return state.setIn(['notices'], notices)
 }
 
@@ -89,7 +89,7 @@ export const addFriendRequest = (state, { msg }) => {
     const notices = state.getIn(['notices']).asMutable()
     msg.id = Date.now()
     msg.disabled = false
-    notices.push(msg)
+    notices.unshift(msg)
     return state.setIn(['notices'], notices)
 }
 

@@ -31,6 +31,7 @@ import WebIM from '@/common/WebIM';
 import SearchInput from '@/components/common/searchInput'
 import _ from 'lodash'
 import AppDB from '@/utils/AppDB';
+import clsx from 'clsx';
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
@@ -66,15 +67,19 @@ const useStyles = makeStyles((theme) => {
             marginRight: theme.spacing(2),
         },
         toolbar: {
+            fontSize: '24px',
         },
         title: {
             flexGrow: 1,
             alignSelf: 'flex-end',
         },
         nameBox: {
-            marginLeft: '14px'
+            marginLeft: '14px',
+            fontSize: '15px'
         },
-
+        menuItem: {
+            padding: '4px 30px 4px 18px'
+        },
         menuItemIconBox: {
             marginRight: '5px',
             '& span': {
@@ -82,7 +87,10 @@ const useStyles = makeStyles((theme) => {
                 fontWeight: 'bold'
             }
         },
-
+        icon: {
+            fontSize: '24px',
+            color: '#fff'
+        },
         search: {
             position: 'relative',
             borderRadius: '15px',
@@ -122,8 +130,6 @@ const useStyles = makeStyles((theme) => {
                 },
             },
         },
-
-
     })
 });
 
@@ -171,7 +177,7 @@ function ProminentAppBar(props) {
                 open={Boolean(addEl)}
                 onClose={() => setAddEl(null)}
             >
-                <MenuItem onClick={getAdress}>
+                <MenuItem onClick={getAdress} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-tongxunlu"></Icon>
                     </Box>
@@ -179,7 +185,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Address Book')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={createGroup}>
+                <MenuItem onClick={createGroup} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-chuangjianqunzu"></Icon>
                     </Box>
@@ -187,7 +193,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Create Group')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={addFriend}>
+                <MenuItem onClick={addFriend} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-tianjiahaoyou"></Icon>
                     </Box>
@@ -195,7 +201,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Add Friends')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={addGroup}>
+                <MenuItem onClick={addGroup} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-qunhaoyou"></Icon>
                     </Box>
@@ -249,7 +255,7 @@ function ProminentAppBar(props) {
                 open={Boolean(settingEl)}
                 onClose={() => setSettingEl(null)}
             >
-                <MenuItem onClick={handleInfoClick}>
+                <MenuItem onClick={handleInfoClick} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-gerenziliao"></Icon>
                     </Box>
@@ -257,7 +263,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Personal Data')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={() => setShowUserSetting(true)}>
+                <MenuItem onClick={() => setShowUserSetting(true)} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-shezhi"></Icon>
                     </Box>
@@ -265,7 +271,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Settings')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={handleLogout}>
+                <MenuItem onClick={handleLogout} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-tuichu"></Icon>
                     </Box>
@@ -297,7 +303,7 @@ function ProminentAppBar(props) {
                 open={Boolean(sessionEl)}
                 onClose={() => setSessionEl(null)}
             >
-                <MenuItem onClick={handleClickSessionInfo}>
+                <MenuItem onClick={handleClickSessionInfo} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-huihuaxinxi"></Icon>
                     </Box>
@@ -305,7 +311,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Session Info')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={handleClickClearMessage}>
+                <MenuItem onClick={handleClickClearMessage} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-qingkongxiaoxi"></Icon>
                     </Box>
@@ -313,7 +319,7 @@ function ProminentAppBar(props) {
                         {i18next.t('Clear Message')}
                     </Typography>
                 </MenuItem>
-                <MenuItem onClick={handleClickDeleteSession}>
+                <MenuItem onClick={handleClickDeleteSession} className={classes.menuItem}>
                     <Box className={classes.menuItemIconBox}>
                         <Icon className="iconfont icon-shanchuhuihua"></Icon>
                     </Box>
@@ -362,16 +368,16 @@ function ProminentAppBar(props) {
     return (
         <div className={classes.root}>
             <Box position="static" className={classes.leftBar}
-                style={{ display: showLeft ? 'flex' : 'none', width: isSmallScreen ? '100vw' : '30vw', maxWidth: isSmallScreen ? '100vw' : '400px' }}>
+                style={{ display: showLeft ? 'flex' : 'none', width: isSmallScreen ? '100vw' : '26vw', maxWidth: isSmallScreen ? '100vw' : '400px' }}>
                 <img src={agora} alt="agora" />
                 <Toolbar className={classes.toolbar}>
                     <IconButton
                         onClick={handleClickAdd}
-                        className="iconfont icon-tianjia1 icon"
+                        className={clsx(classes.icon, "iconfont icon-tianjia1")}
                     ></IconButton>
                     <IconButton
                         onClick={handleClickSetting}
-                        className="iconfont icon-shezhi icon"
+                        className={clsx("iconfont icon-shezhi", classes.icon)}
                     ></IconButton>
                 </Toolbar>
             </Box>
@@ -399,7 +405,7 @@ function ProminentAppBar(props) {
 
                     <IconButton
                         onClick={handleSessionInfoClick}
-                        className="iconfont icon-hanbaobao icon"
+                        className={clsx("iconfont icon-hanbaobao", classes.icon)}
                     ></IconButton>
                 </Toolbar>
             </Box>

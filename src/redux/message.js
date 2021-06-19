@@ -5,7 +5,7 @@ import _ from 'lodash'
 import store from '@/redux'
 import WebIM from '@/common/WebIM';
 import AppDB from '@/utils/AppDB';
-
+import { message } from '@/components/common/Alert'
 
 /* ------------- Initial State ------------- */
 export const INITIAL_STATE = Immutable({
@@ -26,7 +26,7 @@ export const INITIAL_STATE = Immutable({
 /* -------- Types and Action Creators -------- */
 const { Types, Creators } = createActions({
     addMessage: ['message', 'messageType'],
-    deleteMessage: ['msgId'],
+    deleteMessage: ['msgId', 'to', 'chatType'],
     updateMessageStatus: ['message', 'status'],
     clearUnread: ["chatType", "sessionId"],
     updateMessages: ["chatType", "sessionId", "messages"],
@@ -160,17 +160,18 @@ const { Types, Creators } = createActions({
         }
     },
 
-    recallMessage: (to, chatType, message) => {
+    recallMessage: (to, chatType, msg) => {
         return (dispatch, getState) => {
-            const { id, toJid } = message
+            const { id, toJid, mid } = msg
             WebIM.conn.recallMessage({
                 to: to,
-                mid: toJid, // message id
+                mid: toJid || mid, // message id
                 type: chatType,
                 success: () => {
-                    dispatch(Creators.deleteMessage(id))
+                    dispatch(Creators.deleteMessage(id, to, chatType))
                 },
                 fail: (err) => {
+                    console.log(err)
                     message.error('recall fail')
                 }
             })
@@ -331,12 +332,18 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
     return state
 }
 
-export const deleteMessage = (state, { msgId }) => {
+export const deleteMessage = (state, { msgId, to, chatType }) => {
     msgId = msgId.mid || msgId
     const byId = state.getIn(['byId', msgId])
-    if (!byId) { return console.error(`not found message: ${msgId}`) }
-    const { chatType, chatId } = byId
-    let messages = state.getIn([chatType, chatId]).asMutable()
+    let sessionType, chatId
+    if (!byId) {
+        sessionType = chatType
+        chatId = to
+    } else {
+        sessionType = byId.chatType
+        chatId = byId.chatId
+    }
+    let messages = state.getIn([sessionType, chatId]).asMutable()
     let targetMsg = _.find(messages, { id: msgId })
     const index = messages.indexOf(targetMsg)
     messages.splice(index, 1, {
@@ -346,9 +353,8 @@ export const deleteMessage = (state, { msgId }) => {
             type: 'recall'
         }
     })
-    state = state.setIn([chatType, chatId], messages)
+    state = state.setIn([sessionType, chatId], messages)
     AppDB.deleteMessage(msgId)
-
     return state
 }
 

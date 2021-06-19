@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => {
             alignItems: 'center',
             paddingBottom: theme.spacing(4),
             padding: '16px 24px',
-            width: '100%',
+            width: theme.spacing(100),
             boxSizing: 'border-box'
         },
         inputLabel: {
@@ -61,7 +61,7 @@ export default function AddfriendDialog({ open, onClose }) {
                     {i18next.t('User Id')}
                 </Typography>
                 <TextField
-                    id="outlined-basic" label="userId" variant="outlined" fullWidth autoFocus name="email"
+                    label="userId" variant="outlined" fullWidth autoFocus name="email"
                     error={error}
                     value={inputValue}
                     onChange={handleChange} />

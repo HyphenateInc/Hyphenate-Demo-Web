@@ -25,6 +25,10 @@ const BaseSwitch = withStyles({
 })(Switch);
 const useStyles = makeStyles((theme) => {
     return ({
+        contentBox: {
+            width: theme.spacing(100),
+            position: 'relative',
+        },
         root: {
             width: '100%',
             maxHeight: '70vh',
@@ -35,7 +39,7 @@ const useStyles = makeStyles((theme) => {
         },
         listItem: {
             height: theme.spacing(14),
-            width: theme.spacing(86),
+            width: theme.spacing(100),
             maxWidth: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -86,19 +90,22 @@ const useStyles = makeStyles((theme) => {
             height: '30px',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '6px 12px'
+            padding: '12px 19px 27px 19px'
         },
-
+        footerText: {
+            fontSize: '12px'
+        },
         step2Content: {
-            width: theme.spacing(86),
+            width: `calc(${theme.spacing(100)} - 54px)`,
             maxHeight: '70vh',
             minHeight: '35vh',
-            margin: 0,
-            padding: 0
+            margin: '0 27px',
+            padding: 0,
+            borderBottom: '0.5px solid rgba(206, 211, 217, 1)'
         },
         'step2-itemBox': {
             display: 'flex',
-            margin: '12px',
+            margin: '12px 0px',
             alignItems: 'center',
             justifyContent: 'space-between',
             '& div': {
@@ -169,7 +176,7 @@ function CreateGroup(props) {
     }
     function renderContent() {
         return (
-            <>
+            <div className={classes.contentBox}>
                 <SearchInput onChange={handleSearchChange} />
 
                 <List dense className={classes.root}>
@@ -206,14 +213,14 @@ function CreateGroup(props) {
                     })}
 
                 </List>
-            </>
+            </div>
         )
     }
 
     function footer() {
         return (
             <div className={classes.footer}>
-                <p>{checkedFriend.length + ' Members selected'}</p>
+                <p className={classes.footerText}>{checkedFriend.length + ' Members selected'}</p>
                 <Button variant="outlined" color="primary" onClick={handleNextClick}>
                     Next
                 </Button>

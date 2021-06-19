@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Avatar, Button } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import NoticeActions from '@/redux/notice'
+import GroupActions from '@/redux/group'
 import WebIM from '@/common/WebIM'
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -68,7 +69,9 @@ function Notice() {
                 groupId: msg.gid,
                 id: msg.id,
                 invitee: WebIM.conn.context.userId,
-                success: () => { },
+                success: () => {
+                    dispatch(GroupActions.getGroups())
+                },
                 error: () => { }
             }))
         }

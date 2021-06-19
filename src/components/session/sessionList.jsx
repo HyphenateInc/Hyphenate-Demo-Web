@@ -121,17 +121,17 @@ export default function SessionList(props) {
                 if (notices.length) {
                     let msg
                     session.unreadNum = noticeUnreadNum
-                    if (notices[notices.length - 1].type === 'joinGroupNotifications') {
-                        msg = 'Request to join the group:' + notices[notices.length - 1].gid
+                    if (notices[0].type === 'joinGroupNotifications') {
+                        msg = 'Request to join the group:' + notices[0].gid
                     }
-                    else if (notices[notices.length - 1].type === 'invite') {
-                        msg = `${notices[notices.length - 1].from} invite you join group ${notices[notices.length - 1].gid}`
+                    else if (notices[0].type === 'invite') {
+                        msg = `${notices[0].from} invite you join group ${notices[0].gid}`
                     }
                     else {
-                        msg = notices[notices.length - 1]?.status
+                        msg = notices[0]?.status
                     }
                     session.lastMessage = {
-                        time: notices[notices.length - 1].id,
+                        time: notices[0].id,
                         body: {
                             msg: msg
                         }
@@ -163,7 +163,7 @@ export default function SessionList(props) {
             if (sessionType === 'groupChat' && !groupMember[sessionId]) {
                 dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: sessionId }))
                 dispatch(GroupMemberActions.getMutedAsync(sessionId))
-                // dispatch(GroupMemberActions.getGroupAdminAsync(sessionId))
+                dispatch(GroupMemberActions.getGroupAdminAsync(sessionId))
             }
             else if (sessionType === 'chatRoom') {
                 // join room

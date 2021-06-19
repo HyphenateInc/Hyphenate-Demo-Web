@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            width: '100%',
+            width: theme.spacing(100),
             paddingBottom: theme.spacing(4),
             padding: '16px 24px',
             boxSizing: 'border-box'
@@ -61,7 +61,7 @@ export default function AddGroupDialog({ open, onClose }) {
                     {i18next.t('Group Id')}
                 </Typography>
                 <TextField
-                    id="outlined-basic" label="groupId" variant="outlined" fullWidth autoFocus name="email"
+                    label="groupId" variant="outlined" fullWidth autoFocus name="email"
                     error={error}
                     value={inputValue}
                     onChange={handleChange} />

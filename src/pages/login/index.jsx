@@ -81,7 +81,6 @@ function Login(props) {
                             margin="normal"
                             value={values.userName}
                             fullWidth
-                            id="email"
                             label={i18next.t('username')}
                             name="email"
                             autoFocus

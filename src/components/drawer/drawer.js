@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SingleChatInfo from './singleChatInfo'
 import GroupChatInfo from './groupChatInfo'
 import CommonActions from '@/redux/common'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from "react-router-dom";
 const drawerWidth = 348
 const useStyles = makeStyles((theme) => ({
