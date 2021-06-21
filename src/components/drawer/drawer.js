@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import SingleChatInfo from './singleChatInfo'
 import GroupChatInfo from './groupChatInfo'
 import CommonActions from '@/redux/common'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useParams } from "react-router-dom";
 const drawerWidth = 348
 const useStyles = makeStyles((theme) => ({
@@ -39,8 +39,8 @@ function BaseDrawer({ open }) {
             onClose={handleClose}
         >
             <div className={classes.drawerContent}>
-                {chatType === 'singleChat' && <SingleChatInfo />}
-                {chatType === 'groupChat' && <GroupChatInfo />}
+                {chatType === 'singleChat' && <SingleChatInfo onDelete={() => { handleClose() }} />}
+                {chatType === 'groupChat' && <GroupChatInfo onDissolve={() => { handleClose() }} />}
             </div>
         </Drawer>
     )

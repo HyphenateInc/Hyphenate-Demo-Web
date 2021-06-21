@@ -52,6 +52,18 @@ const { Types, Creators } = createActions({
             };
             WebIM.conn.rejectJoinGroup(options)
         }
+    },
+    agreeInviteIntoGroup: (gid, options) => {
+        return (dispatch, getState) => {
+            dispatch(Creators.disableStatus(options.id, 'Disagreed'))
+            WebIM.conn.agreeInviteIntoGroup(options)
+        }
+    },
+    rejectInviteIntoGroup: (gid, options) => {
+        return (dispatch, getState) => {
+            dispatch(Creators.disableStatus(options.id, 'Disagreed'))
+            WebIM.conn.rejectInviteIntoGroup(options)
+        }
     }
 
 })
@@ -67,14 +79,17 @@ export const INITIAL_STATE = Immutable({
 
 export const addGroupRequest = (state, { msg }) => {
     const notices = state.getIn(['notices']).asMutable()
-    notices.push(msg)
+    msg.id = Date.now()
+    msg.disabled = false
+    notices.unshift(msg)
     return state.setIn(['notices'], notices)
 }
 
 export const addFriendRequest = (state, { msg }) => {
     const notices = state.getIn(['notices']).asMutable()
     msg.id = Date.now()
-    notices.push(msg)
+    msg.disabled = false
+    notices.unshift(msg)
     return state.setIn(['notices'], notices)
 }
 

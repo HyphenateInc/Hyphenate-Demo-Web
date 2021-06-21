@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            width: theme.spacing(70),
+            width: theme.spacing(100),
             paddingBottom: theme.spacing(4),
             margin: "16px 24px",
         },
@@ -67,35 +67,31 @@ export default function UserInfo({ open, onClose }) {
     };
     const handleClickSave = () => {
         dispatch(LoginActions.updateOwnInfo('nickname', inputValue))
+        setIsEdit(true)
     }
     function renderContent() {
         return (
             <Box className={classes.root}>
-                {/* <Grid container spacing={5}> */}
                 <div className={classes.gridAvatar}>
                     <Avatar className={classes.avatar} />
                 </div>
 
                 <div className={classes.gridItem}>
                     <Typography variant="inherit" noWrap style={{ width: "50px" }}>
-                        {i18next.t("Name")}
+                        {i18next.t("User Id")}
                     </Typography>
-                    {/* </Grid> */}
-                    {/* <Grid item xs={10} className={classes.gridItem}> */}
+
                     <Typography variant="inherit" noWrap>
-                        {WebIM.conn.context.userId}
+                        {': ' + WebIM.conn.context.userId}
                     </Typography>
                 </div>
-
+                {/* 
                 <div className={classes.gridItem}>
                     <span style={{ width: "50px" }}>
                         {i18next.t("nickname")}
                     </span>
-                    {/* </Grid> */}
-                    {/* <Grid item xs={10} className={classes.gridItem}> */}
                     <TextField
                         style={{ flex: '1' }}
-                        id="outlined-basic"
                         variant="outlined"
                         autoFocus
                         name="userName"
@@ -117,8 +113,7 @@ export default function UserInfo({ open, onClose }) {
                             <Button style={{ width: "50px", minWidth: '0' }} onClick={() => setIsEdit(true)}>{i18next.t("UserInfo-Cancel")}</Button>
                         </>
                     )}
-                </div>
-                {/* </Grid> */}
+                </div> */}
             </Box>
         );
     }

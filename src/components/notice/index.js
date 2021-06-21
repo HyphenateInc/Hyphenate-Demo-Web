@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Box, Avatar, Button } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import NoticeActions from '@/redux/notice'
+import GroupActions from '@/redux/group'
+import WebIM from '@/common/WebIM'
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -44,6 +46,14 @@ const useStyles = makeStyles((theme) => ({
         '& button': {
             margin: '0 5px'
         }
+    },
+    noData: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        color: 'rgba(0,0,0,.15)',
+        fontSize: '28px',
+        height: '80vh'
     }
 }))
 function Notice() {
@@ -54,6 +64,17 @@ function Notice() {
         if (msg.type === 'joinGroupNotifications') {
             dispatch(NoticeActions.agreeJoinGroup(msg))
         }
+        else if (msg.type === 'invite') {
+            dispatch(NoticeActions.agreeInviteIntoGroup(msg.gid, {
+                groupId: msg.gid,
+                id: msg.id,
+                invitee: WebIM.conn.context.userId,
+                success: () => {
+                    dispatch(GroupActions.getGroups())
+                },
+                error: () => { }
+            }))
+        }
         else {
             dispatch(NoticeActions.acceptFriendRequest(msg))
         }
@@ -62,13 +83,36 @@ function Notice() {
         if (msg.type === 'joinGroupNotifications') {
             dispatch(NoticeActions.rejectJoinGroup(msg))
         }
-        dispatch(NoticeActions.declineFriendRequest(msg))
+        else if (msg.type === 'invite') {
+            dispatch(NoticeActions.rejectInviteIntoGroup(msg.gid, {
+                groupId: msg.gid,
+                id: msg.id,
+                invitee: WebIM.conn.context.userId,
+                success: () => { },
+                error: () => { }
+            }))
+        }
+        else {
+            dispatch(NoticeActions.declineFriendRequest(msg))
+        }
     }
+
     return (
         <div className={classes.root}>
             <div>
-                {notices.map((msg, index) => {
-                    const noticeType = msg.type === 'joinGroupNotifications' ? 'groupRequest' : 'friendRequest'
+                {notices.length ? notices.map((msg, index) => {
+                    const noticeType = (msg.type === 'joinGroupNotifications' || msg.type === 'invite') ? 'groupRequest' : 'friendRequest'
+                    let requestmsg
+                    if (msg.type === 'joinGroupNotifications') {
+                        requestmsg = 'Request to join the group:' + msg.gid
+                    }
+                    else if (msg.type === 'invite') {
+                        requestmsg = `${msg.from} invite you join group ${msg.gid}`
+                    }
+                    else {
+                        requestmsg = msg?.status
+                    }
+
                     return <div className={classes.itemBox} key={msg.from + index}>
                         <div className={classes.header}>
                             {noticeType === 'friendRequest' ? 'Request add friend' :
@@ -78,7 +122,7 @@ function Notice() {
                         <div className={classes.content}>
                             <Box className={classes.msgBox}>
                                 <Avatar></Avatar>
-                                <span>{msg.status}</span>
+                                <span>{requestmsg}</span>
                             </Box>
                             <Box className={classes.btnBox}>
                                 <Button
@@ -101,7 +145,7 @@ function Notice() {
                             </Box>
                         </div>
                     </div>
-                })}
+                }) : <div className={classes.noData}>no data</div>}
             </div>
         </div>
     )

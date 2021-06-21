@@ -8,14 +8,18 @@ import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { useSelector, useDispatch } from 'react-redux'
+import { useParams } from "react-router-dom";
 import { renderTime } from '@/utils'
 import groupIcon from '@/assets/images/group@2x.png'
 import chatRoomIcon from '@/assets/images/chatroom@2x.png'
 import noticeIcon from '@/assets/images/notice@2x.png'
+import GroupMemberActions from '@/redux/groupMember'
+import ChatRoomActions from '@/redux/chatRoom'
+import i18next from 'i18next';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
-        height: '100%',
+        minHeight: '100%',
         backgroundColor: 'rgba(206, 211, 217, 0.3)',
         margin: 0,
         padding: 0
@@ -69,6 +73,7 @@ const useStyles = makeStyles((theme) => ({
         color: 'rgba(1, 1, 1, .6)',
         width: 'calc(100% - 18px)',
         fontSize: '14px',
+        wordBreak: 'break-all'
     },
     unreadNum: {
         color: '#fff',
@@ -86,11 +91,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SessionList(props) {
     const classes = useStyles();
+    const dispatch = useDispatch()
     const sessionList = useSelector(state => state.session.sessionList) || []
     const message = useSelector(state => state.message)
     const { unread } = message
     const currentSession = useSelector(state => state.session.currentSession)
+    const groupMember = useSelector(state => state.group.groupMember)
+    const chatRoombyId = useSelector(state => state.chatRoom.byId) || {}
+    const groupbyId = useSelector(state => state.group.group.byId) || {}
     let currentSessionIndex = 0
+    let { chatType, to } = useParams()
 
     // dealwith notice unread num 
     const notices = useSelector(state => state.notice.notices) || []
@@ -100,10 +110,6 @@ export default function SessionList(props) {
             noticeUnreadNum++
         }
     })
-    console.log('******&&&&&& sessionList', sessionList)
-
-
-
     const renderSessionList = sessionList.asMutable({ deep: true })
         .map((session) => {
             const chatMsgs = message?.[session.sessionType]?.[session.sessionId] || []
@@ -115,13 +121,17 @@ export default function SessionList(props) {
                 if (notices.length) {
                     let msg
                     session.unreadNum = noticeUnreadNum
-                    if (notices[notices.length - 1].type === 'joinGroupNotifications') {
-                        msg = 'Request to join the group:' + notices[notices.length - 1].gid
-                    } else {
-                        msg = notices[notices.length - 1]?.status
+                    if (notices[0].type === 'joinGroupNotifications') {
+                        msg = 'Request to join the group:' + notices[0].gid
+                    }
+                    else if (notices[0].type === 'invite') {
+                        msg = `${notices[0].from} invite you join group ${notices[0].gid}`
+                    }
+                    else {
+                        msg = notices[0]?.status
                     }
                     session.lastMessage = {
-                        time: notices[notices.length - 1].id,
+                        time: notices[0].id,
                         body: {
                             msg: msg
                         }
@@ -143,26 +153,51 @@ export default function SessionList(props) {
     });
 
     const handleListItemClick = (event, index, session) => {
+        const { sessionId, sessionType } = session
         if (currentSessionIndex !== index) {
             props.onClickItem(session)
+            if (chatType === 'chatRoom') {
+                // quit pre room
+                dispatch(ChatRoomActions.quitChatRoom(to))
+            }
+            if (sessionType === 'groupChat' && !groupMember[sessionId]) {
+                dispatch(GroupMemberActions.listGroupMemberAsync({ groupId: sessionId }))
+                dispatch(GroupMemberActions.getMutedAsync(sessionId))
+                dispatch(GroupMemberActions.getGroupAdminAsync(sessionId))
+            }
+            else if (sessionType === 'chatRoom') {
+                // join room
+                dispatch(ChatRoomActions.joinChatRoom(sessionId))
+            }
+
         }
     };
 
+
+    useEffect(() => {
+        if (!currentSession && renderSessionList[0]) {
+            props.onClickItem(renderSessionList[0])
+        }
+    }, [renderSessionList, currentSession, props])
     return (
         <List dense className={classes.root}>
             {renderSessionList.map((session, index) => {
                 let avatarSrc = ''
+                let sessionName = session.sessionId // TODO: user info
                 if (session.sessionType === 'groupChat') {
                     avatarSrc = groupIcon
+                    sessionName = groupbyId?.[session.sessionId]?.groupName || session.sessionId
                 }
                 else if (session.sessionType === 'chatRoom') {
                     avatarSrc = chatRoomIcon
+                    sessionName = chatRoombyId?.[session.sessionId]?.name
                 }
                 else if (session.sessionType === 'notice') {
                     avatarSrc = noticeIcon
+                    sessionName = i18next.t('notice')// session.sessionId === 'notice'
                 }
                 return (
-                    <ListItem key={session.sessionId}
+                    <ListItem key={session.sessionId + session.sessionType}
                         selected={currentSessionIndex === index}
                         onClick={(event) => handleListItemClick(event, index, session)}
                         button className={classes.listItem}>
@@ -176,13 +211,16 @@ export default function SessionList(props) {
                             </ListItemAvatar>
                             <Box className={classes.itemRightBox}>
                                 <Typography className={classes.itemName}>
-                                    <span>{session.sessionId}</span>
+                                    <span>{sessionName}</span>
 
                                     <span className={classes.time}>{renderTime(session?.lastMessage?.time)}</span>
                                 </Typography>
 
                                 <Typography className={classes.itemMsgBox}>
-                                    <span className={classes.itemMsg}>{session?.lastMessage?.body?.msg}</span>
+                                    <span className={classes.itemMsg}>{
+                                        session?.lastMessage?.body?.type === 'recall' ?
+                                            `${session?.lastMessage.from} ${i18next.t('retracted a message')}` :
+                                            session?.lastMessage?.body?.msg}</span>
 
                                     <span className={classes.unreadNum} style={{ display: session.unreadNum ? 'inline-block' : 'none' }}>{session.unreadNum}</span>
                                 </Typography>

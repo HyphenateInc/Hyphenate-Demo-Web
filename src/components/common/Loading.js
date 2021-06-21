@@ -11,14 +11,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Loading({ show }) {
-    console.log('-----', show)
     const classes = useStyles();
     const handleClose = () => {
         // setOpen(false);
     };
-
-    useEffect(() => {
-    }, [show])
 
     return (
         <div>

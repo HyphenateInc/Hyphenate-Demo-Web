@@ -18,7 +18,6 @@ const { Types, Creators } = createActions({
                         roster.forEach((item) => {
                             item.info = infos[item.name]
                         })
-                        console.log('---- roster--- ', roster)
                         dispatch(Creators.updateRoster(roster))
                         dispatch(CommonActions.setLoading(false))
                     })
@@ -39,10 +38,23 @@ const { Types, Creators } = createActions({
             })
         }
     },
+    removeContact: id => {
+        return (dispatch, getState) => {
+            WebIM.conn.removeRoster({
+                to: id,
+                success: function () {
+                    dispatch(Creators.getContacts())
+                },
+                error: function () {
+                    //TODO ERROR
+                }
+            })
+        }
+    },
 })
 /* ------------- Reducers ------------- */
 function isFriend(v) {
-    return v.subscription != 'none'
+    return v.subscription !== 'none'
 }
 export const updateRoster = (state, { roster }) => {
     let byName = {},

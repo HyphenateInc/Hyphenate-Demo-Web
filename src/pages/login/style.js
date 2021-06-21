@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme) => {
         logoContainer: {
             textAlign: 'center',
             '& img': {
-                width: '60%',
                 height: '7.7vh'
             }
         },

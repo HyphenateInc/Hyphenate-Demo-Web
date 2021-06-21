@@ -19,7 +19,6 @@ export const message = {
 }
 
 export const alert = (content, type = 'info') => {
-    console.log('content', content)
     if (!wrap) {
         wrap = document.createElement("div");
         wrap.style.cssText = `

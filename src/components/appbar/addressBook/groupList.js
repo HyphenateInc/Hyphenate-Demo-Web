@@ -16,7 +16,7 @@ import { history } from '@/common/routes'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
-            width: '100%',
+            width: theme.spacing(86),
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
@@ -61,8 +61,8 @@ const useStyles = makeStyles((theme) => {
 export default function GroupList({ open, onClose }) {
     const classes = useStyles();
     const dispatch = useDispatch()
-    const sessionList = useSelector(state => state.session.sessionList.asMutable())
-    const groupList = useSelector(state => state.group.group.names)
+    const sessionList = useSelector(state => state.session.sessionList.asMutable())||[]
+    const groupList = useSelector(state => state.group.group.names)||[]
     const handleClose = () => {
         onClose()
     }

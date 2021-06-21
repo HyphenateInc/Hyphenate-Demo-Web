@@ -33,6 +33,7 @@ function Emoji({ anchorEl, onClose, onSelected }) {
                     key={k}
                 >
                     <div
+                        name={k}
                         style={{
                             width: emojiWidth,
                             height: emojiWidth,
@@ -42,6 +43,7 @@ function Emoji({ anchorEl, onClose, onSelected }) {
                         <img
                             src={require(`../../../assets/faces/${v}`).default}
                             alt={k}
+                            name={k}
                             width={emojiWidth}
                             height={emojiWidth}
                         />
@@ -52,7 +54,8 @@ function Emoji({ anchorEl, onClose, onSelected }) {
     }
 
     const handleEmojiClick = (e) => {
-        const emoji = e.target.alt
+        const emoji = e.target.attributes.name.value
+        if (!emoji) return
         onSelected(emoji)
     }
     return (

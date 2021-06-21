@@ -8,9 +8,9 @@ const PAGE_NUM = 20
 const AppDB = {
     // init db
     init: function (username) {
-        if (this.db) {
-            return
-        }
+        // if (this.db) {
+        //     return
+        // }
         // create a database, use username as db name
         const db = this.db = new Dexie(username)
 
@@ -135,7 +135,7 @@ const AppDB = {
             $_TABLE.where('chatType')
                 .equals(chatType)
                 .filter(item => {
-                    if (chatType === 'chat') {
+                    if (chatType === 'singleChat') {
                         return item.from === id || item.to === id
                     } else {
                         return item.to === id

@@ -1,10 +1,16 @@
-import React, { memo, useEffect } from 'react'
+import React, { memo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Switch } from '@material-ui/core';
+import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemText, Tooltip, Switch, Menu, MenuItem, Typography } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux'
 import clsx from 'clsx';
 import i18next from 'i18next';
+import GroupMemberActions from '@/redux/groupMember'
+import SessionActions from '@/redux/session'
 import GroupActions from '@/redux/group'
+import InviteDialog from './inviteMember'
+import ModifyInfoDialog from './modifyInfo'
+import BlackListDialog from './blackList'
+import WebIM from '../../common/WebIM';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -72,19 +78,159 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 // TODO: group description
-function GroupChatInfo() {
+function GroupChatInfo({ onDissolve }) {
     const classes = useStyles();
-    const currentUser = useSelector(state => state.session.currentSession)
-    const groupInfo = useSelector(state => state.group?.group?.byId[currentUser])?.info?.asMutable({ deep: true }) || {}
+    const dispatch = useDispatch()
+    const currentGroup = useSelector(state => state.session.currentSession)
+    const groupInfo = useSelector(state => state.group?.group?.byId[currentGroup])?.info?.asMutable({ deep: true }) || {}
     const groupMember = groupInfo.affiliations || []
-    const memberInfo = useSelector(state => state.group?.group?.byId[currentUser])?.memberInfo?.asMutable({ deep: true }) || {}
+    const memberInfo = useSelector(state => state.group?.group?.byId[currentGroup])?.memberInfo?.asMutable({ deep: true }) || {}
     const myUserName = useSelector(state => state.login.username)
+    const mutedList = useSelector(state => state.group.groupMember?.[currentGroup]?.muted) || {}
+    const adminList = useSelector(state => state.group.groupMember?.[currentGroup]?.admins) || []
+    let myRole = 'member'
 
+    const [addEl, setAddEl] = useState(null)
+    const [showInvite, setShowInvite] = useState(false)
+    const [showModify, setShowModify] = useState(false)
+    const [showBlackList, setShowBlackList] = useState(false)
+    const sessionList = useSelector(state => state.session.sessionList) || []
+
+    if (groupInfo.owner === myUserName) {
+        myRole = 'owner'
+    } else if (adminList.includes(myUserName)) {
+        myRole = 'admin'
+    }
+    groupMember.forEach(element => {
+        if (adminList.includes(element.id)) {
+            element.role = 'admin'
+        }
+    });
+
+    console.log('-----adminList------', adminList, myRole)
+    function renderTools(member) {
+        const memberRole = member.role
+        console.log('memberRole', member)
+        if (myRole === 'member') return null
+        let RoleIcon = null
+        let MuteIcon = null
+        if (memberRole === 'owner') {
+            RoleIcon = <Tooltip title={i18next.t('Owner')}>
+                <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-guanliyuan")} style={{ color: '#00BA6E' }} />
+            </Tooltip>
+        }
+        else if (memberRole === 'admin') {
+            RoleIcon = <Tooltip title={i18next.t('Remove admin')}>
+                <IconButton
+                    onClick={() => {
+                        dispatch(GroupMemberActions.removeAdminAsync(currentGroup, member.id))
+                    }}
+                    className={clsx(classes.itemToolbtn, "iconfont icon-guanliyuan")} />
+            </Tooltip>
+        } else {
+            RoleIcon = <Tooltip title={i18next.t('Set as admin')}>
+                <IconButton
+                    onClick={() => {
+                        dispatch(GroupMemberActions.setAdminAsync(currentGroup, member.id))
+                    }}
+                    className={clsx(classes.itemToolbtn, "iconfont icon-shezhiguanliyuan")} />
+            </Tooltip>
+        }
+        if (mutedList?.byName?.[member.id]) {
+            MuteIcon = <Tooltip title={i18next.t('muted')}>
+                <IconButton
+                    onClick={() => { dispatch(GroupMemberActions.removeMuteAsync(currentGroup, member.id)) }}
+                    className={clsx(classes.itemToolbtn, "iconfont icon-jinyan2")} />
+            </Tooltip>
+        } else {
+            MuteIcon = <Tooltip title={i18next.t('mute')}>
+                <IconButton
+                    onClick={() => { dispatch(GroupMemberActions.muteAsync(currentGroup, member.id)) }}
+                    className={clsx(classes.itemToolbtn, "iconfont icon-wujinyanzhuangtai")} />
+            </Tooltip>
+        }
+        if (myRole === 'owner' || myRole === 'admin') {
+            return (
+                <>
+                    {RoleIcon}
+                    {MuteIcon}
+                    <Tooltip title={i18next.t('groupBlockSingle')}>
+                        <IconButton
+                            onClick={() => {
+                                dispatch(GroupMemberActions.groupBlockSingleAsync(currentGroup, member.id))
+                            }}
+                            className={clsx(classes.itemToolbtn, "iconfont icon-heimingdan")} />
+                    </Tooltip>
+
+                    <Tooltip title={i18next.t('removeSingleGroupMember')}>
+                        <IconButton
+                            onClick={() => { dispatch(GroupMemberActions.removeSingleGroupMemberAsync(currentGroup, member.id)) }}
+                            className={clsx(classes.itemToolbtn, "iconfont icon-shanchu")} />
+                    </Tooltip>
+                </>
+            )
+        }
+    }
+    const handleClickMoreAction = (e) => {
+        // if (myRole === 'member')
+        setAddEl(e.currentTarget)
+    }
+    const handleBlackListClick = () => {
+        dispatch(GroupMemberActions.getGroupBlackListAsync(currentGroup))
+        setShowBlackList(true)
+    }
+    const handleDissolveClick = (type) => {
+        if (type === 'dissolve') {
+            dispatch(GroupActions.dissolveGroupAsync({
+                groupId: groupInfo.id, groupName: groupInfo.name
+            }))
+        } else if (type === 'quit') {
+            dispatch(GroupMemberActions.quitGroupAsync({
+                groupId: currentGroup, username: WebIM.conn.context.userId
+            }))
+        }
+
+        dispatch(SessionActions.deleteSession(groupInfo.id))
+        // dispatch(SessionActions.setCurrentSession(sessionList[0].sessionId))
+        onDissolve()
+    }
+    function renderMoreMenu() {
+        return (
+            <Menu
+                id="simple-menu"
+                anchorEl={addEl}
+                keepMounted
+                open={Boolean(addEl)}
+                onClose={() => setAddEl(null)}
+            >
+                <MenuItem onClick={() => { setShowInvite(true) }}>
+                    <Typography variant="inherit" noWrap>
+                        {i18next.t('Invite Member')}
+                    </Typography>
+                </MenuItem>
+                {myRole === 'owner' && <MenuItem onClick={() => { setShowModify(true) }}>
+                    <Typography variant="inherit" noWrap>
+                        {i18next.t('Modify Information')}
+                    </Typography>
+                </MenuItem>}
+                {myRole === 'owner' && < MenuItem onClick={handleBlackListClick}>
+                    <Typography variant="inherit" noWrap>
+                        {i18next.t('Blacklist')}
+                    </Typography>
+                </MenuItem>}
+                <MenuItem onClick={() => { handleDissolveClick(myRole === 'owner' ? 'dissolve' : 'quit') }}>
+                    <Typography variant="inherit" noWrap>
+                        {myRole === 'owner' ? i18next.t('Dissolve Group') : i18next.t('Quit Group')}
+                    </Typography>
+                </MenuItem>
+            </Menu >
+        )
+    }
     return (
         <div className={classes.root}>
             <header className={classes.header}>
                 <span>{groupInfo?.name}</span>
-                <IconButton className="iconfont icon-shezhi" />
+                <IconButton onClick={handleClickMoreAction} className="iconfont icon-shezhi" />
             </header>
             <main className={classes.main}>
                 <div className={classes.avatarBox}>
@@ -93,31 +239,31 @@ function GroupChatInfo() {
                 <div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Group ID</span>
-                            <span>{currentUser}</span>
+                            <span>{i18next.t('Group ID')}</span>
+                            <span>{currentGroup}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Appear in group search</span>
-                            <span>{groupInfo.public ? 'Public' : 'Non public'}</span>
+                            <span>{i18next.t('Appear in group search')}</span>
+                            <span>{groupInfo.public ? i18next.t('Public') : i18next.t('Non public')}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Allow members to invite</span>
-                            <span>{groupInfo.allowinvites ? 'Able' : 'Disable'}</span>
+                            <span>{i18next.t('Allow members to invite')}</span>
+                            <span>{groupInfo.allowinvites ? i18next.t('Able') : i18next.t('Disable')}</span>
                         </div>
                     </div>
                     <div className={classes.infoItem}>
                         <div>
-                            <span>Block group message</span>
-                            <span>{groupInfo.mute}</span>
+                            <span>{i18next.t('Block group message')}</span>
+                            <span>{groupInfo.mute ? i18next.t('muted') : i18next.t('Unmute')}</span>
                         </div>
                     </div>
                 </div>
                 <div className={classes.nembers}>
-                    {i18next.t('Numbers') + `(${groupInfo.affiliations_count})`}
+                    {i18next.t('Numbers') + `(${groupMember.length || 1})`}
                 </div>
             </main>
             <div className={classes.listBox}>
@@ -133,40 +279,28 @@ function GroupChatInfo() {
                                 <ListItemText
                                     primary={memberInfo?.[member.id]?.nickname || member.id}
                                 />
-
+                                {renderTools(member)}
                                 {/* <Tooltip title={i18next.t('Set as admin')}>
                                     <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-shezhiguanliyuan")} />
                                 </Tooltip> */}
 
-                                <Tooltip title={i18next.t('Set as admin')}>
-                                    <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-guanliyuan")} />
-                                </Tooltip>
 
-                                {/* <Tooltip title={i18next.t('mute')}>
-                                    <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-wujinyanzhuangtai")} />
-                                </Tooltip> */}
-                                <Tooltip title={i18next.t('muted')}>
-                                    <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-jinyan2")} />
-                                </Tooltip>
-
-
-                                <Tooltip title={i18next.t('groupBlockSingle')}>
-                                    <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-heimingdan")} />
-                                </Tooltip>
-
-                                <Tooltip title={i18next.t('removeSingleGroupMember')}>
-                                    <IconButton className={clsx(classes.itemToolbtn, "iconfont icon-shanchu")} />
-                                </Tooltip>
 
                             </ListItem>
                         )
                     })}
                 </List>
             </div>
+            {renderMoreMenu()}
+            <InviteDialog open={showInvite}
+                onClose={() => { setShowInvite(false) }} />
+            <ModifyInfoDialog open={showModify} onClose={() => { setShowModify(false) }} />
+
+            <BlackListDialog open={showBlackList} onClose={() => { setShowBlackList(false) }} />
             {/* TODO: other infos*/}
 
         </div>
     )
 }
 
-export default GroupChatInfo
+export default memo(GroupChatInfo)

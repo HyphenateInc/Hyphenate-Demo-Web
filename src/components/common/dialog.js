@@ -59,7 +59,7 @@ export default function AlertDialogSlide({ open, title, content, onClose, footer
                 <DialogTitle id="alert-dialog-slide-title" onClose={onClose}>
                     {title}
                 </DialogTitle>
-                <DialogContent dividers style={{ padding: '0' }}>
+                <DialogContent dividers style={{ padding: '0', borderBottom: 'none' }}>
                     {content}
                 </DialogContent>
                 {

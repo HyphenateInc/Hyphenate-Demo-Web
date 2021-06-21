@@ -2,4 +2,5 @@ node_modules
 .eslintcache
 .DS_Store
 *.map
+*.vscode
 build/*

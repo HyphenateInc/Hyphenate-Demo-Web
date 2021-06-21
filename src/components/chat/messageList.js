@@ -13,6 +13,7 @@ import ImgMessage from './messages/imageMessage';
 import AudioMessage from './messages/audioMessage';
 import TextMessage from './messages/textMessage';
 import { useParams } from "react-router-dom";
+import i18next from 'i18next';
 const useStyles = makeStyles((theme) => ({
     root: {
         width: '100%',
@@ -39,13 +40,6 @@ function MessageList({ messageList }) {
     const [isPullingDown, setIsPullingDown] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     let _not_scroll_bottom = false
-    // useEffect(() => {
-    //     document.oncontextmenu = function (e) {
-    //         console.log('oncontextmenu', e);
-    //         e.stopPropagation()
-    //         return false
-    //     }
-    // }, [])
 
     useEffect(() => {
         if (!_not_scroll_bottom) {
@@ -58,7 +52,6 @@ function MessageList({ messageList }) {
     })
 
     const handleRecallMsg = useCallback((message) => {
-        console.log('handleRecallMsg', message)
         const { to, chatType } = message
         dispatch(MessageActions.recallMessage(to, chatType, message))
     }, [dispatch])
@@ -82,32 +75,32 @@ function MessageList({ messageList }) {
             <div ref={scrollEl} className="pulldown-wrapper" onScroll={handleScroll}>
                 <div className="pulldown-tips">
                     <div style={{ display: isLoaded ? 'block' : 'none' }}>
-                        <span>loaded</span>
+                        <span style={{ fontSize: '12px' }}>{i18next.t('no more messages')}</span>
                     </div>
                     <div style={{ display: isPullingDown ? 'block' : 'none' }}>
                         <span>Loading...</span>
                     </div>
                 </div>
                 <ul className="pulldown-list">
-                    {messageList.map((msg) => {
+                    {messageList.length ? messageList.map((msg, index) => {
                         if (msg.body.type === 'txt') {
-                            return <TextMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <TextMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'file') {
-                            return <FileMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <FileMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'img') {
-                            return <ImgMessage message={msg} key={msg.id} onRecallMessage={handleRecallMsg} />
+                            return <ImgMessage message={msg} key={msg.id + index} onRecallMessage={handleRecallMsg} />
                         }
                         else if (msg.body.type === 'audio') {
-                            <AudioMessage message={msg} key={msg.id} />
+                            return <AudioMessage message={msg} key={msg.id + index} />
                         }
                         else if (msg.body.type === 'recall') {
-                            return <RetractedMessage message={msg} key={msg.id} />
+                            return <RetractedMessage message={msg} key={msg.id + index} />
                         } else {
                             return null
                         }
-                    })}
+                    }) : null}
                 </ul>
             </div>
         </div>

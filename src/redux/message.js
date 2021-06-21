@@ -5,7 +5,7 @@ import _ from 'lodash'
 import store from '@/redux'
 import WebIM from '@/common/WebIM';
 import AppDB from '@/utils/AppDB';
-
+import { message } from '@/components/common/Alert'
 
 /* ------------- Initial State ------------- */
 export const INITIAL_STATE = Immutable({
@@ -26,9 +26,11 @@ export const INITIAL_STATE = Immutable({
 /* -------- Types and Action Creators -------- */
 const { Types, Creators } = createActions({
     addMessage: ['message', 'messageType'],
-    deleteMessage: ['msgId'],
+    deleteMessage: ['msgId', 'to', 'chatType'],
     updateMessageStatus: ['message', 'status'],
     clearUnread: ["chatType", "sessionId"],
+    updateMessages: ["chatType", "sessionId", "messages"],
+    updateMessageMid: ['id', 'mid'],
     // -async-
     sendTxtMessage: (to, chatType, message = {}) => {
         return (dispatch, getState) => {
@@ -44,7 +46,8 @@ const { Types, Creators } = createActions({
                 success: () => {
                     dispatch(Creators.updateMessageStatus(formatMsg, 'sent'))
                 },
-                fail: () => {
+                fail: (e) => {
+                    console.error("Send private text error", e);
                     dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
                 }
             })
@@ -122,18 +125,54 @@ const { Types, Creators } = createActions({
         }
     },
 
-    recallMessage: (to, chatType, message) => {
+    sendRecorder: (to, chatType, file) => {
         return (dispatch, getState) => {
-            const { id } = message
+            const formatMsg = formatLocalMessage(to, chatType, file, 'audio')
+            const { id } = formatMsg
+            const msgObj = new WebIM.message('audio', id)
+            msgObj.set({
+                ext: {
+                    file_length: file.data.size,
+                    file_type: file.data.type
+                },
+                file: file,
+                to,
+                chatType,
+                onFileUploadError: function (error) {
+                    console.log(error)
+                    // dispatch(Creators.updateMessageStatus(pMessage, "fail"))
+                    formatMsg.status = 'fail'
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
+                },
+                onFileUploadComplete: function (data) {
+                    let url = data.uri + '/' + data.entities[0].uuid
+                    formatMsg.url = url
+                    formatMsg.status = 'sent'
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'sent'))
+                },
+                fail: function () {
+                    dispatch(Creators.updateMessageStatus(formatMsg, 'fail'))
+                },
+            })
+
+            WebIM.conn.send(msgObj.body)
+            dispatch(Creators.addMessage(formatMsg, 'audio'))
+        }
+    },
+
+    recallMessage: (to, chatType, msg) => {
+        return (dispatch, getState) => {
+            const { id, toJid, mid } = msg
             WebIM.conn.recallMessage({
                 to: to,
-                mid: id, // message id
+                mid: toJid || mid, // message id
                 type: chatType,
                 success: () => {
-                    dispatch(Creators.deleteMessage(id))
+                    dispatch(Creators.deleteMessage(id, to, chatType))
                 },
                 fail: (err) => {
-                    message.error('撤回失败')
+                    console.log(err)
+                    message.error('recall fail')
                 }
             })
         }
@@ -167,14 +206,32 @@ const { Types, Creators } = createActions({
             AppDB.clearMessage(chatType, id).then(res => { })
         }
     },
+
+    addAudioMessage: (message, bodyType) => {
+        return (dispatch, getState) => {
+            let options = {
+                url: message.url,
+                headers: {
+                    Accept: 'audio/mp3'
+                },
+                onFileDownloadComplete: function (response) {
+                    let objectUrl = WebIM.utils.parseDownloadResponse.call(WebIM.conn, response)
+                    message.audioSrcUrl = message.url
+                    message.url = objectUrl
+                    dispatch(Creators.addMessage(message, bodyType))
+                },
+                onFileDownloadError: function () {
+                }
+            }
+            WebIM.utils.download.call(WebIM.conn, options)
+        }
+    },
 })
 
 /* ------------- Reducers ------------- */
 export const addMessage = (state, { message, messageType = 'txt' }) => {
     const rootState = store.getState()
-    // console.log('******* rootState ****', message)
     !message.status && (message = formatServerMessage(message, messageType)) //remote messages do not have a status field
-    console.log('格式化的消息', message)
     const username = WebIM.conn.context.userId//_.get(state, 'login.username', '')
     const { id, to, status } = message
     let { chatType } = message
@@ -216,7 +273,6 @@ export const addMessage = (state, { message, messageType = 'txt' }) => {
     })
 
     !isPushed && chatData.push(_message)
-
     // add a message to db, if by myselt, isUnread equals 0
     !isPushed && AppDB.addMessage(_message, !bySelf ? 1 : 0)
 
@@ -256,24 +312,38 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
     }
     const byId = state.getIn(['byId', id])
     if (!_.isEmpty(byId)) {
-        const { type, chatId } = byId
-        let messages = state.getIn([type, chatId]).asMutable()
+        const { chatType, chatId } = byId
+        let messages = state.getIn([chatType, chatId]).asMutable()
         let found = _.find(messages, { id: parseInt(id) })
-        let msg = found.setIn(['status'], status)
-        msg = found.setIn(['toJid'], mid)
+        found.setIn(['status'], status)
+        found.setIn(['toJid'], mid)
+        let msg = {
+            ...found,
+            status: status,
+            toJid: mid
+        }
         messages.splice(messages.indexOf(found), 1, msg)
-        AppDB.updateMessageStatus(id, status).then(res => { })
-        state = state.setIn([type, chatId], messages)
+        setTimeout(() => {
+            AppDB.updateMessageStatus(id, status).then(res => { })
+        }, 1000)
+
+        return state.setIn([chatType, chatId], messages)
     }
     return state
 }
 
-export const deleteMessage = (state, { msgId }) => {
+export const deleteMessage = (state, { msgId, to, chatType }) => {
     msgId = msgId.mid || msgId
     const byId = state.getIn(['byId', msgId])
-    if (!byId) { return console.error(`not found message: ${msgId}`) }
-    const { chatType, chatId } = byId
-    let messages = state.getIn([chatType, chatId]).asMutable()
+    let sessionType, chatId
+    if (!byId) {
+        sessionType = chatType
+        chatId = to
+    } else {
+        sessionType = byId.chatType
+        chatId = byId.chatId
+    }
+    let messages = state.getIn([sessionType, chatId]).asMutable()
     let targetMsg = _.find(messages, { id: msgId })
     const index = messages.indexOf(targetMsg)
     messages.splice(index, 1, {
@@ -283,9 +353,8 @@ export const deleteMessage = (state, { msgId }) => {
             type: 'recall'
         }
     })
-    state = state.setIn([chatType, chatId], messages)
+    state = state.setIn([sessionType, chatId], messages)
     AppDB.deleteMessage(msgId)
-
     return state
 }
 
@@ -306,6 +375,25 @@ export const clearMessage = (state, { chatType, id }) => {
     return chatType ? state.setIn([chatType, id], []) : state
 }
 
+export const updateMessages = (state, { chatType, sessionId, messages }) => {
+    return state.setIn([chatType, sessionId], messages)
+}
+
+export const updateMessageMid = (state, { id, mid }) => {
+    const byId = state.getIn(['byId', id])
+    if (!_.isEmpty(byId)) {
+        const { chatType, chatId } = byId
+        let messages = state.getIn([chatType, chatId]).asMutable()
+        let found = _.find(messages, { id: parseInt(id) })
+        let msg = found.setIn(['toJid'], mid)
+        messages.splice(messages.indexOf(found), 1, msg)
+        state = state.setIn([chatType, chatId], messages)
+    }
+
+    setTimeout(() => { AppDB.updateMessageMid(mid, Number(id)) }, 1000)
+    return state.setIn(['byMid', mid], { id })
+}
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const messageReducer = createReducer(INITIAL_STATE, {
@@ -314,6 +402,9 @@ export const messageReducer = createReducer(INITIAL_STATE, {
     [Types.CLEAR_UNREAD]: clearUnread,
     [Types.FETCH_MESSAGE]: fetchMessage,
     [Types.CLEAR_MESSAGE]: clearMessage,
+    [Types.UPDATE_MESSAGES]: updateMessages,
+    [Types.UPDATE_MESSAGE_MID]: updateMessageMid,
+    [Types.UPDATE_MESSAGE_STATUS]: updateMessageStatus,
 })
 
 export default Creators

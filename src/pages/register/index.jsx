@@ -24,7 +24,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import clsx from 'clsx';
 
 function Register(props) {
-    // console.log('login 刷新了', history)
     // const num = useSelector(state => state.num);
     const dispatch = useDispatch();
 
@@ -32,10 +31,8 @@ function Register(props) {
 
     useEffect(() => {
         if (isWidthUp('sm', props.width)) {
-            console.log('大屏幕')
             setShowBanner(true)
         } else {
-            console.log('小屏幕')
             setShowBanner(false)
         }
     }, [props.width])
@@ -64,6 +61,9 @@ function Register(props) {
         if (!values.userName || !values.password) {
             return message.error(i18next.t('The user name or password cannot be empty'))
         }
+        if (values.userName.length > 64 || values.password.length > 64) {
+            return message.error(i18next.t('The user name or password is not valid'))
+        }
         dispatch(LoginActions.register(values.userName, values.password))
         // props.setLoading(true)
     }
@@ -77,21 +77,22 @@ function Register(props) {
                     <Box className={classes.logoContainer}>
                         <img src={agora} alt='agora' />
                     </Box>
-                    <form className={classes.form} >
+                    <form className={classes.form} autoComplete="off">
                         <TextField
+                            InputLabelProps={{
+                                style: { color: '#00BA6E' }
+                            }}
                             inputProps={{ className: classes.input }}
                             margin="normal"
-                            required
                             value={values.userName}
                             fullWidth
-                            id="email"
                             label={i18next.t('username')}
                             name="email"
                             autoFocus
                             onChange={handleChange('userName')}
                         />
                         <FormControl className={classes.password}>
-                            <InputLabel htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
+                            <InputLabel style={{ color: '#00BA6E' }} htmlFor="standard-adornment-password">{i18next.t('password')}</InputLabel>
                             <Input
                                 className={classes.input}
                                 id="standard-adornment-password"

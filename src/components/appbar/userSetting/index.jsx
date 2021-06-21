@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      minWidth: "300px",
+      width: theme.spacing(100),
       minHeight: theme.spacing(30),
       paddingBottom: theme.spacing(4),
       margin: "16px 24px",

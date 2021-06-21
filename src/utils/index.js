@@ -21,7 +21,7 @@ const { username } = qs.parse(window.location.hash.split('?')[1]);
 })(document, window);
 
 export function getToken() {
-    return Cookie.get('web_im_' + username);
+    return Cookie.get('webim_' + username);
 }
 
 export function getUserName() {
@@ -136,9 +136,19 @@ export function formatServerMessage(message = {}, messageType) {
     const formatMsg = Object.assign(msgTpl.base, message)
     const body = Object.assign(msgTpl[messageType], message)
     let chatType = message.type
-    if (chatType === 'chat') chatType = 'singleChat';
-    if (chatType === 'groupchat') chatType = 'groupChat'
-    if (chatType === 'chatroom') chatType = 'chatRoom'
+    let session
+    if (chatType === 'chat') {
+        chatType = 'singleChat'
+        session = message.from
+    };
+    if (chatType === 'groupchat') {
+        chatType = 'groupChat'
+        session = message.to
+    }
+    if (chatType === 'chatroom') {
+        chatType = 'chatRoom'
+        session = message.to
+    }
     if (messageType === 'txt') {
         body.msg = message.data;
         body.type = 'txt'
@@ -147,12 +157,14 @@ export function formatServerMessage(message = {}, messageType) {
         body.size = body.file_length
     } else if (messageType === 'img') {
         body.type = 'img'
+    } else if (messageType === 'audio') {
+        body.type = 'audio'
     }
     return {
         ...formatMsg,
         status: 'sent',
         chatType,
-        session: message.from,
+        session: session,
         body: {
             ...body,
             ...ext,

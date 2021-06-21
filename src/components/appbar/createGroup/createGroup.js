@@ -9,6 +9,7 @@ import { makeStyles, fade } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux'
 import { message } from '@/components/common/Alert'
 import GroupActions from '@/redux/group'
+import SearchInput from '@/components/common/searchInput'
 const BaseSwitch = withStyles({
     switchBase: {
         color: '#00ba6ed9',
@@ -24,16 +25,21 @@ const BaseSwitch = withStyles({
 })(Switch);
 const useStyles = makeStyles((theme) => {
     return ({
+        contentBox: {
+            width: theme.spacing(100),
+            position: 'relative',
+        },
         root: {
             width: '100%',
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
-            padding: 0
+            padding: 0,
+            overflowX: 'hidden'
         },
         listItem: {
             height: theme.spacing(14),
-            width: theme.spacing(86),
+            width: theme.spacing(100),
             maxWidth: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -72,58 +78,6 @@ const useStyles = makeStyles((theme) => {
             overflow: 'hidden',
         },
 
-        searchBox: {
-            boxSizing: 'border-box',
-            margin: '0 16px',
-            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-            height: '56px',
-            display: 'flex',
-            alignItems: 'center'
-        },
-        search: {
-            flex: 1,
-            display: 'flex',
-            height: '30px',
-            position: 'relative',
-            borderRadius: '15px',
-            backgroundColor: fade("#111", 0.15),
-            '&:hover': {
-                backgroundColor: fade('#111', 0.25),
-            },
-            marginLeft: 0,
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                marginLeft: theme.spacing(1),
-                width: 'auto',
-            },
-        },
-        searchIcon: {
-            padding: theme.spacing(0, 2),
-            height: '100%',
-            position: 'absolute',
-            pointerEvents: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        inputRoot: {
-            color: 'inherit',
-            width: '100%'
-        },
-        inputInput: {
-            padding: theme.spacing(1, 1, 1, 0),
-            // vertical padding + font size from searchIcon
-            paddingLeft: `30px`,
-            paddingRight: '5px',
-            transition: theme.transitions.create('width'),
-            width: '100%',
-            [theme.breakpoints.up('sm')]: {
-                width: '100%',
-                '&:focus': {
-                    width: '100%',
-                },
-            },
-        },
         'icon-green': {
             color: '#00BA6E',
         },
@@ -136,19 +90,22 @@ const useStyles = makeStyles((theme) => {
             height: '30px',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '16px'
+            padding: '12px 19px 27px 19px'
         },
-
+        footerText: {
+            fontSize: '12px'
+        },
         step2Content: {
-            width: theme.spacing(86),
+            width: `calc(${theme.spacing(100)} - 54px)`,
             maxHeight: '70vh',
             minHeight: '35vh',
-            margin: 0,
-            padding: 0
+            margin: '0 27px',
+            padding: 0,
+            borderBottom: '0.5px solid rgba(206, 211, 217, 1)'
         },
         'step2-itemBox': {
             display: 'flex',
-            margin: '12px',
+            margin: '12px 0px',
             alignItems: 'center',
             justifyContent: 'space-between',
             '& div': {
@@ -219,24 +176,8 @@ function CreateGroup(props) {
     }
     function renderContent() {
         return (
-            <>
-                <div className={classes.searchBox}>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <Icon className="iconfont icon-sousuo icon"></Icon>
-                        </div>
-                        <InputBase
-                            placeholder="search"
-                            onChange={handleSearchChange}
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
-                </div>
-
+            <div className={classes.contentBox}>
+                <SearchInput onChange={handleSearchChange} />
 
                 <List dense className={classes.root}>
                     {renderList.map((userId, index) => {
@@ -272,14 +213,14 @@ function CreateGroup(props) {
                     })}
 
                 </List>
-            </>
+            </div>
         )
     }
 
     function footer() {
         return (
             <div className={classes.footer}>
-                <p>{checkedFriend.length + ' Members selected'}</p>
+                <p className={classes.footerText}>{checkedFriend.length + ' Members selected'}</p>
                 <Button variant="outlined" color="primary" onClick={handleNextClick}>
                     Next
                 </Button>
@@ -313,7 +254,7 @@ function CreateGroup(props) {
                 public: step2state.checkedA,
                 approval: true,  // Need approval
                 allowinvites: step2state.checkedB, // True: allow group members to invite others to join the group. False: allow group members to invite others to join the group only if group manager is allowed (Note that public groups (public: true) do not allow group members to invite others to join the group)
-                inviteNeedConfirm: false  // whether the invitee needs to confirm.
+                inviteNeedConfirm: true  // whether the invitee needs to confirm.
             },
             success(res) {
                 serStep2state({ checkedA: true, checkedB: true })

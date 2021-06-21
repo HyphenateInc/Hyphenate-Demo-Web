@@ -22,13 +22,11 @@ const MemoRegister = memo(Register)
 class App extends Component {
   constructor(props) {
     super(props)
-    console.log('props', this.props)
     this.state = {}
   }
 
   componentDidMount() {
     if (getToken()) {
-      console.log('token登录')
       this.props.loginByToken(getUserName(), getToken())
     }
   }

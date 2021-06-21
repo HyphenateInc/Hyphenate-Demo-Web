@@ -18,15 +18,16 @@ import ChatRoomActions from '@/redux/chatRoom'
 const useStyles = makeStyles((theme) => {
     return ({
         root: {
-            width: '100%',
+            width: theme.spacing(100),
             maxHeight: '70vh',
             minHeight: '35vh',
             margin: 0,
-            padding: 0
+            padding: 0,
+            overflowX: 'hidden'
         },
         listItem: {
             height: theme.spacing(14),
-            width: theme.spacing(86),
+            width: theme.spacing(100),
             maxWidth: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -68,10 +69,7 @@ export default function AddressBookDialog(props) {
     const friends = roster.friends || []
     const byName = roster.byName || {}
     const sessionList = useSelector(state => state.session.sessionList.asMutable())
-    const groupList = useSelector(state => state.group.group.names)
-    const chatRoomList = useSelector(state => state.chatRoom.names)
     const handleClick = (itemData) => {
-        console.log('itemData', itemData)
         if (typeof itemData === 'string') {
             const index = _.findIndex(sessionList, item => item.sessionId === itemData);
             if (index < 0) {
@@ -86,15 +84,11 @@ export default function AddressBookDialog(props) {
         } else {
             const { value } = itemData
             if (value === 'group') {
-                if (!groupList.length) {
-                    dispatch(GroupActions.getGroups())
-                }
+                dispatch(GroupActions.getGroups())
                 setGroupOpen(true)
             }
             else if (value === 'chatroom') {
-                if (!chatRoomList.length) {
-                    dispatch(ChatRoomActions.getChatRooms())
-                }
+                dispatch(ChatRoomActions.getChatRooms())
                 setChatRoomOpen(true)
             }
         }
@@ -127,7 +121,7 @@ export default function AddressBookDialog(props) {
                         </ListItemAvatar>
                         <Box className={classes.textBox}>
                             <Typography className={classes.itemName}>{i18next.t('Group')}</Typography>
-                            <Typography className={classes.itemName}>></Typography>
+                            <Typography className={classes.itemName} style={{ color: "rgba(0, 0, 0, 0.38)" }}>{'>'}</Typography>
                         </Box>
                     </Box>
                 </ListItem>
@@ -144,7 +138,7 @@ export default function AddressBookDialog(props) {
                         </ListItemAvatar>
                         <Box className={classes.textBox}>
                             <Typography className={classes.itemName}>{i18next.t('Chat Room')}</Typography>
-                            <Typography className={classes.itemName}>></Typography>
+                            <Typography className={classes.itemName} style={{ color: "rgba(0, 0, 0, 0.38)" }}>{'>'}</Typography>
                         </Box>
                     </Box>
                 </ListItem>
@@ -165,7 +159,9 @@ export default function AddressBookDialog(props) {
                                 </ListItemAvatar>
                                 <Box>
                                     <Typography className={classes.itemName}>
-                                        {byName[userId]?.info?.nickname || userId}</Typography>
+                                        {userId}
+                                        {/* Next issue use nickname {byName[userId]?.info?.nickname || userId} */}
+                                    </Typography>
                                 </Box>
                             </Box>
                         </ListItem>

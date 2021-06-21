@@ -2,7 +2,7 @@ const config = {
     /*
      * Application AppKey
      */
-    appkey: 'easemob-demo#easeim',
+    appkey: 'easemob-demo#chatdemoui',
     /*
      * Application Host
      */
@@ -80,7 +80,7 @@ const config = {
      */
     enableLocalStorage: true,
 
-    deviceId: 'webim'
+    deviceId: ''
 }
 
 export default config

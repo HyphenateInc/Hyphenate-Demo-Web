@@ -5,7 +5,8 @@ import { Box, TextField, Button } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useStore } from 'react-redux'
-import RosterActions from '@/redux/roster'
+import { useSelector } from 'react-redux'
+import GroupMemberActions from '@/redux/groupMember'
 import { message } from '@/components/common/Alert'
 const useStyles = makeStyles((theme) => {
     return ({
@@ -13,9 +14,9 @@ const useStyles = makeStyles((theme) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
+            width: theme.spacing(100),
             paddingBottom: theme.spacing(4),
             padding: '16px 24px',
-            width: theme.spacing(100),
             boxSizing: 'border-box'
         },
         inputLabel: {
@@ -30,16 +31,17 @@ const useStyles = makeStyles((theme) => {
     })
 });
 
-export default function AddfriendDialog({ open, onClose }) {
+export default function InviteDialog({ open, onClose }) {
     const classes = useStyles();
     const dispatch = useDispatch()
     const [inputValue, setInputValue] = useState('')
+    const currentGroup = useSelector(state => state.session.currentSession)
     const [error, setError] = useState(null)
-    const addFriend = () => {
+    const handleClickInvite = () => {
         if (!inputValue) {
             return setError(true)
         }
-        dispatch(RosterActions.addContact(inputValue))
+        dispatch(GroupMemberActions.inviteToGroupAsync(currentGroup, [inputValue]))
         message.success(i18next.t('Successfully send the application'))
         setInputValue('')
         setError(null)
@@ -61,13 +63,13 @@ export default function AddfriendDialog({ open, onClose }) {
                     {i18next.t('User Id')}
                 </Typography>
                 <TextField
-                    label="userId" variant="outlined" fullWidth autoFocus name="email"
+                    label={i18next.t('User Id')} variant="outlined" fullWidth autoFocus name="email"
                     error={error}
                     value={inputValue}
                     onChange={handleChange} />
                 <Button
-                    onClick={addFriend} variant="contained" color="primary" className={classes.button}>
-                    {i18next.t('Add Friends')}
+                    onClick={handleClickInvite} variant="contained" color="primary" className={classes.button}>
+                    {i18next.t('Send Invite')}
                 </Button>
             </Box>
         )
@@ -77,7 +79,7 @@ export default function AddfriendDialog({ open, onClose }) {
         <CommonDialog
             open={open}
             onClose={handleClose}
-            title={i18next.t('Add Friends')}
+            title={i18next.t('Invite Member')}
             content={renderContent()}
         ></CommonDialog>
     )

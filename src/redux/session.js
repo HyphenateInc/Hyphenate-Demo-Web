@@ -13,8 +13,16 @@ const { Types, Creators } = createActions({
     getSessionList: () => {
         return (dispatch, getState) => {
             AppDB.getSessionList().then((res) => {
-                console.log('获取会话列表', res)
-                dispatch(Creators.setSessionList(res))
+                let sessionList = [...getState().session.sessionList].concat(res)
+                let obj = {}
+                let uniqueList = []
+                sessionList.forEach((item) => {
+                    if (!obj[item.sessionType + item.sessionId]) {
+                        obj[item.sessionType + item.sessionId] = true
+                        uniqueList.push(item)
+                    }
+                })
+                dispatch(Creators.setSessionList(uniqueList))
             })
         }
     }
@@ -52,7 +60,9 @@ export const deleteSession = (state, { sessionId }) => {
     sessionList = sessionList.filter((item) => {
         return item.sessionId !== sessionId
     })
-    return state.setIn(['sessionList'], sessionList)
+    state = state.setIn(['currentSession'], '')
+    state = state.setIn(['sessionList'], sessionList)
+    return state
 }
 
 /* ------------- Hookup Reducers To Types ------------- */

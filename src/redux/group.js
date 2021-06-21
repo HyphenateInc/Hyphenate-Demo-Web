@@ -3,13 +3,16 @@ import Immutable from 'seamless-immutable'
 import _ from 'lodash'
 import WebIM from '@/common/WebIM';
 import CommonActions from '@/redux/common'
-
+import { message } from '@/components/common/Alert'
 const { Types, Creators } = createActions({
     updateGroup: ['groups'],
+    deleteGroup: ['groupId'],
     dissolveGroup: ['group'],
     updateGroupInfo: ['info'],
     getGroupInfo: ['groupInfo'],
     updateGroupMemberInfo: ['groupId', 'memberInfo'],
+    changeMemberRole: ['groupId', 'userId', 'role'],
+    deleteMember: ['groupId', 'userId'],
     getGroups: () => {
         return (dispatch, getState) => {
             dispatch(CommonActions.setLoading(true))
@@ -32,6 +35,9 @@ const { Types, Creators } = createActions({
                     dispatch(Creators.dissolveGroup({ groupId, groupName }))
                 },
                 error: e => {
+                    if (e.type === 17) {
+                        message.error('group owner permission is required');
+                    }
                 }
             })
         }
@@ -142,12 +148,15 @@ export const dissolveGroup = (state, { group }) => {
 }
 
 export const updateGroupInfo = (state, { info }) => {
-    const group = state.getIn(['byId', info.groupId])
+    const group = state.getIn(['byId', info.groupId]).asMutable({ deep: true })
     const oldName = `${group.groupName}_#-#_${group.roomId || group.groupId}`
     const newName = `${info.groupName}_#-#_${group.roomId || group.groupId}`
     const names = state.getIn(['names']).asMutable()
     names.splice(names.indexOf(oldName), 1, newName)
-    return state.setIn(['byId', info.groupId, 'groupName'], info.groupName).set('names', names.sort())
+    group.info.name = info.groupName
+    group.groupName = info.groupName
+    state.setIn(['byId', info.groupId], { ...group })
+    return state.setIn(['byId', info.groupId], group).set('names', names.sort())
 }
 
 export const getGroupInfo = (state, { groupInfo }) => {
@@ -156,6 +165,31 @@ export const getGroupInfo = (state, { groupInfo }) => {
 
 export const updateGroupMemberInfo = (state, { groupId, memberInfo }) => {
     return state.setIn(['byId', groupId, 'memberInfo'], memberInfo)
+}
+export const changeMemberRole = (state, { groupId, userId, role }) => {
+    const affiliations = state.getIn(['byId', groupId, 'info', 'affiliations']).asMutable({ deep: true })
+    affiliations.forEach((item) => {
+        if (item.id === userId) {
+            item.role = role
+        }
+    })
+    return state.setIn(['byId', groupId, 'info', 'affiliations'], affiliations)
+}
+export const deleteMember = (state, { groupId, userId }) => {
+    let affiliations = state.getIn(['byId', groupId, 'info', 'affiliations']).asMutable({ deep: true })
+    affiliations = affiliations.filter((item) => {
+        return item.id !== userId
+    })
+    return state.setIn(['byId', groupId, 'info', 'affiliations'], affiliations)
+}
+
+export const deleteGroup = (state, { groupId }) => {
+    const byId = state.getIn(['byId']).without(groupId)
+    const names = []
+    _.forEach(byId, (v, k) => {
+        names.push(v.groupName + '_#-#_' + v.groupId)
+    })
+    return state.merge({ byId, names })
 }
 /* ------------- Initial State ------------- */
 
@@ -171,7 +205,10 @@ export const reducer = createReducer(INITIAL_STATE, {
     [Types.UPDATE_GROUP_INFO]: updateGroupInfo,
     [Types.DISSOLVE_GROUP]: dissolveGroup,
     [Types.GET_GROUP_INFO]: getGroupInfo,
-    [Types.UPDATE_GROUP_MEMBER_INFO]: updateGroupMemberInfo
+    [Types.UPDATE_GROUP_MEMBER_INFO]: updateGroupMemberInfo,
+    [Types.CHANGE_MEMBER_ROLE]: changeMemberRole,
+    [Types.DELETE_MEMBER]: deleteMember,
+    [Types.DELETE_GROUP]: deleteGroup,
 })
 
 

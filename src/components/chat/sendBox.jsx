@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import MessageActions from '@/redux/message'
 import { useParams } from "react-router-dom";
 import WebIM from '@/common/WebIM'
+import Recorder from './messages/recorder2'
+import clsx from 'clsx';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -33,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
         color: '#010101',
         resize: 'none'
     },
+    senderBarBox: {
+        position: 'relative',
+        bottom: theme.spacing(-5)
+    },
     senderBar: {
         height: theme.spacing(12),
         width: theme.spacing(12),
@@ -40,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
     },
     hide: {
         display: 'none'
+    },
+    icon: {
+        fontSize: '24px',
+        padding: '8px',
+        margin: '4px'
     }
 }));
 
@@ -56,6 +67,7 @@ function SendBox() {
     const inputRef = useRef(null)
     const inputValueRef = useRef(null)
     const imageEl = useRef(null)
+    const [showRecorder, setShowRecorder] = useState(false)
     inputValueRef.current = inputValue
     const handleClickEmoji = (e) => {
         setEmojiVisible(e.currentTarget)
@@ -115,7 +127,6 @@ function SendBox() {
     }
     const handleFileChange = (e) => {
         let file = WebIM.utils.getFileUrl(e.target)
-        console.log(file)
         if (!file.filename) {
             return false
         }
@@ -123,7 +134,6 @@ function SendBox() {
     }
     const handleImageChange = (e) => {
         let file = WebIM.utils.getFileUrl(e.target)
-        console.log(file)
         if (!file.filename) {
             return false
         }
@@ -132,10 +142,16 @@ function SendBox() {
     return (
         <Box className={classes.root}>
             <Box className={classes.toolbar}>
-                <IconButton ref={emojiRef} className="iconfont icon-biaoqing icon" onClick={handleClickEmoji}></IconButton>
+                <IconButton ref={emojiRef} className={clsx("iconfont icon-biaoqing", classes.icon)} onClick={handleClickEmoji}></IconButton>
+                {
+                    window.location.protocol === 'https:' &&
+                    <IconButton onClick={() => { setShowRecorder(true) }}
+                        className={clsx("iconfont icon-luyin", classes.icon)}></IconButton>
+                }
 
-                {/* <IconButton className="iconfont icon-luyin icon"></IconButton> */}
-                <IconButton className="iconfont icon-tupian icon"
+                <Recorder open={showRecorder} onClose={() => { setShowRecorder(false) }} />
+                <IconButton
+                    className={clsx("iconfont icon-tupian", classes.icon)}
                     onClick={handleImageClick}
                 >
                     <input
@@ -146,7 +162,8 @@ function SendBox() {
                         className={classes.hide}
                     />
                 </IconButton>
-                <IconButton className="iconfont icon-wenjianfujian icon"
+                <IconButton
+                    className={clsx("iconfont icon-wenjianfujian", classes.icon)}
                     onClick={handleFileClick}
                 >
                     <input
@@ -165,7 +182,7 @@ function SendBox() {
                     onChange={handleInputChange}
                     ref={inputRef}
                 ></textarea>
-                <IconButton onClick={sendMessage}>
+                <IconButton onClick={sendMessage} className={classes.senderBarBox}>
                     <img src={sender} alt="send" className={classes.senderBar} />
                 </IconButton>
             </Box>

@@ -11,6 +11,7 @@ import { reducer as groupReducer } from './group'
 import { reducer as chatRoomReducer } from './chatRoom'
 import { reducer as noticeReducer } from './notice'
 import './webim'
+import Immutable from 'seamless-immutable'
 const logger = createLogger(); // initialize logger
 const rootReducer = combineReducers({
     login: loginReducer,
@@ -37,8 +38,57 @@ const composeEnhancers =
 //     applyMiddleware(...middlewares),
 //     window.devToolsExtension ? window.devToolsExtension() : f => f
 // ))
+const initState = Immutable({
+    login: {},
+    message: {
+        byId: {},
+        singleChat: {},
+        groupChat: {},
+        chatRoom: {},
+        stranger: {},
+        extra: {},
+        unread: {
+            singleChat: {},
+            groupChat: {},
+            chatRoom: {},
+            stranger: {},
+        }
+    },
+    common: { fetching: false },
+    session: {
+        sessionList: [],
+        currentSession: ''
+    },
+    group: {
+        groupMember: { groupMember: [] },
+        group: {
+            groupList: [], byId: {},
+            names: []
+        }
+    },
+    chatRoom: { chatRoomList: [] },
+    notice: { notices: [] },
+    roster: {
+        byName: null,
+        names: [],
+        friends: []
+    }
+})
 
-const store = createStore(rootReducer, compose(...enhancers))
+const appReducer = (state, action) => {
+    if (action.type === 'LOGOUT') {
+        state = initState
+    }
+
+    return rootReducer(state, action)
+}
+
+
+// const appReducer = (state = initState, action) => {
+//     const newState = combinedReducer(state, action)
+//     return rootReducer(newState, action)
+// }
+const store = createStore(appReducer, compose(...enhancers))
 
 export default store
 
