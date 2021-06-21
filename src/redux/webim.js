@@ -125,7 +125,7 @@ WebIM.conn.listen({
                 store.dispatch(MessageActions.clearUnread('groupChat', msg.gid))
                 store.dispatch(SessionActions.deleteSession(msg.gid))
                 break
-            case 'leaveGroup': // 某人离开群
+            case 'leaveGroup':
                 message.error(
                     `${msg.from}${i18next.t('LeaveGroup')}${msg.gid}.`
                 )

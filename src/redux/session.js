@@ -13,7 +13,16 @@ const { Types, Creators } = createActions({
     getSessionList: () => {
         return (dispatch, getState) => {
             AppDB.getSessionList().then((res) => {
-                dispatch(Creators.setSessionList(res))
+                let sessionList = [...getState().session.sessionList].concat(res)
+                let obj = {}
+                let uniqueList = []
+                sessionList.forEach((item) => {
+                    if (!obj[item.sessionType + item.sessionId]) {
+                        obj[item.sessionType + item.sessionId] = true
+                        uniqueList.push(item)
+                    }
+                })
+                dispatch(Creators.setSessionList(uniqueList))
             })
         }
     }

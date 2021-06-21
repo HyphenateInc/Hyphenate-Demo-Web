@@ -136,9 +136,19 @@ export function formatServerMessage(message = {}, messageType) {
     const formatMsg = Object.assign(msgTpl.base, message)
     const body = Object.assign(msgTpl[messageType], message)
     let chatType = message.type
-    if (chatType === 'chat') chatType = 'singleChat';
-    if (chatType === 'groupchat') chatType = 'groupChat'
-    if (chatType === 'chatroom') chatType = 'chatRoom'
+    let session
+    if (chatType === 'chat') {
+        chatType = 'singleChat'
+        session = message.from
+    };
+    if (chatType === 'groupchat') {
+        chatType = 'groupChat'
+        session = message.to
+    }
+    if (chatType === 'chatroom') {
+        chatType = 'chatRoom'
+        session = message.to
+    }
     if (messageType === 'txt') {
         body.msg = message.data;
         body.type = 'txt'
@@ -154,7 +164,7 @@ export function formatServerMessage(message = {}, messageType) {
         ...formatMsg,
         status: 'sent',
         chatType,
-        session: message.from,
+        session: session,
         body: {
             ...body,
             ...ext,
