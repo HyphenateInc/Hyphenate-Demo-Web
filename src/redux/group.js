@@ -95,7 +95,6 @@ const { Types, Creators } = createActions({
     getGroupMemberInfo: (groupId, ids) => {
         return (dispatch, getState) => {
             WebIM.conn.fetchUserInfoById(ids).then((res) => {
-                console.log(res)
                 let infos = res.data
                 dispatch(Creators.updateGroupMemberInfo(groupId, infos))
             })
@@ -113,7 +112,6 @@ const { Types, Creators } = createActions({
                 message: "I want to join"         // 请求信息
             };
             WebIM.conn.joinGroup(options).then((res) => {
-                console.log(res)
             })
         }
     }

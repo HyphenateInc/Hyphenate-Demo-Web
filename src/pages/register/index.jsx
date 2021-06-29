@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import Container from '@material-ui/core/Container';
 import i18next from "i18next";
 import { message } from '@/components/common/Alert'
 import LoginActions from '@/redux/login'
-import { history } from '@/common/routes'
 import useStyles from '@/pages/login/style'
 import agora from '@/assets/images/agora@2x.png'
 
@@ -21,7 +19,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import clsx from 'clsx';
 
 function Register(props) {
     // const num = useSelector(state => state.num);
