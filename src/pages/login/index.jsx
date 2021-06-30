@@ -26,10 +26,8 @@ function Login(props) {
 
     useEffect(() => {
         if (isWidthUp('sm', props.width)) {
-            console.log('大屏幕')
             setShowBanner(true)
         } else {
-            console.log('小屏幕')
             setShowBanner(false)
         }
     }, [props.width])

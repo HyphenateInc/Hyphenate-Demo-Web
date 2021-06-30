@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#fff',
         display: 'flex',
         alignItems: 'center',
-        marginLeft: '10px',
+        margin: '0 10px',
         marginBottom: '26px'
     },
     fileIcon: {

@@ -2,7 +2,6 @@ import { history } from '@/common/routes'
 import store from '@/redux'
 import WebIM from '@/common/WebIM'
 import AppDB from '@/utils/AppDB'
-import LoginActions from '@/redux/login'
 import CommonActions from '@/redux/common'
 import MessageActions from '@/redux/message'
 import RosterActions from "@/redux/roster"
@@ -21,7 +20,7 @@ const sessionType = {
 WebIM.conn.listen({
     // success connect
     onOpened: msg => {
-        console.log('onOpened', msg)
+        console.log(`Connect to chat server successful`)
         const userName = WebIM.conn.context.userId//store.getState().login.username
         // init DB
         AppDB.init(userName)

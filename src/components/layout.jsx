@@ -26,16 +26,13 @@ function Layout(props) {
     const [showRight, setShowRight] = useState(true)
     const [leftXs, setleftXs] = useState(3)
 
-    console.log(`当前宽度: ${props.width}`)
     useMemo(() => {
         if (isWidthUp('sm', props.width)) {
-            console.log('大屏幕')
             setShowRight(true)
             setleftXs(3)
             setShowLeft(true)
             setShowRight(true)
         } else {
-            console.log('小屏幕')
             setShowRight(false)
             setleftXs(12)
             setShowLeft(true)
@@ -44,13 +41,11 @@ function Layout(props) {
     }, [props.width])
 
     const handleGoBack = () => {
-        console.log('right hiden left show')
         setShowLeft(true)
         setShowRight(false)
     }
 
     const handleClickItem = (e) => {
-        console.log('handleClickItem', e)
         if (props.width === 'sm') {
             setShowLeft(false)
             setShowRight(true)

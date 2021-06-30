@@ -34,7 +34,6 @@ export const INITIAL_STATE = Immutable({
 })
 /* ------------- Reducers ------------- */
 export const setSessionList = (state, { sessionList }) => {
-    console.log('sessionList ------', sessionList)
     return state.merge({ sessionList })
 }
 

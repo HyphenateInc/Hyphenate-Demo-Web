@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Chat({ messageList }) {
     const classes = useStyles();
-    console.log('** Render Chat **')
     return (
         <div className={classes.root}>
             <MessageList messageList={messageList} />

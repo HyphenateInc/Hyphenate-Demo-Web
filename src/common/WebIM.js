@@ -1,4 +1,4 @@
-import websdk from 'easemob-websdk'
+import websdk from 'agora-chat-sdk'
 import AgoraRTC from "agora-rtc-sdk-ng"
 import config from './WebIMConfig'
 const WebIM = window.WebIM || {};

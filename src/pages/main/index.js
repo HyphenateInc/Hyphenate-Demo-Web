@@ -52,7 +52,6 @@ function Main(props) {
     }, [props.width])
 
     const handleClickItem = useCallback((session) => {
-        console.log('handleClickItem', session)
         const { sessionType, sessionId } = session
         if (sessionId === 'notice') {
             const redirectPath = '/notice'
