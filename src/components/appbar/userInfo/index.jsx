@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CommonDialog from "@/components/common/dialog";
 import i18next from "i18next";
 import { Box, TextField, Avatar, Button } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import { useDispatch, useSelector, useStore } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Typography from "@material-ui/core/Typography";
-import SettingsIcon from "@material-ui/icons/Settings";
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import WebIM from "../../../common/WebIM";
 import LoginActions from "@/redux/login"

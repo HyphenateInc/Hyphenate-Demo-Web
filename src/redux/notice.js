@@ -33,8 +33,8 @@ const { Types, Creators } = createActions({
         return (dispatch, getState) => {
             dispatch(Creators.disableStatus(msgId, 'Agreed'))
             const options = {
-                applicant: name,                          // 申请加群的用户名
-                groupId: groupId                           // 群组ID
+                applicant: name, // The ID of the user who applied to join the group
+                groupId: groupId
             };
             WebIM.conn.agreeJoinGroup(options)
         }
@@ -47,8 +47,9 @@ const { Types, Creators } = createActions({
         return (dispatch, getState) => {
             dispatch(Creators.disableStatus(msgId, 'Disagreed'))
             const options = {
-                applicant: name,                          // 申请加群的用户名
-                groupId: groupId                           // 群组ID
+                applicant: name, // The ID of the user who applied to join the group
+                groupId: groupId, // group id
+                reason: 'I do not like you'
             };
             WebIM.conn.rejectJoinGroup(options)
         }

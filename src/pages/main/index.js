@@ -27,17 +27,16 @@ function Main(props) {
         to && dispatch(SessionActions.setCurrentSession(to))
     }, [to, dispatch])
 
-    console.log(`当前宽度: ${props.width}`)
     // when width changed relayout
     useEffect(() => {
+        // big screen
         if (isWidthUp('sm', props.width)) {
-            console.log('大屏幕')
             setShowRight(true)
             setIsSmallScreen(false)
             setShowLeft(true)
             setShowRight(true)
         } else {
-            console.log('小屏幕')
+            // small screen
             setShowRight(false)
             setIsSmallScreen(true)
             setShowLeft(true)

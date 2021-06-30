@@ -1,16 +1,11 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import AppBar from '@material-ui/core/AppBar';
+import React, { useState } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
-import { IconButton, Icon, InputBase } from '@material-ui/core';
+import { IconButton, Icon } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, fade } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import agora from '@/assets/images/agora@2x.png'
-import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
+import withWidth from '@material-ui/core/withWidth';
 import { useParams } from "react-router-dom";
 import { Menu, MenuItem } from '@material-ui/core';
 import i18next from "i18next";
@@ -164,8 +159,6 @@ function ProminentAppBar(props) {
         }
         setSessionEl(e.currentTarget)
     }
-
-    const handleClose = () => { }
 
     /*********** first icon button: Add ***********/
     function renderAddMenu() {

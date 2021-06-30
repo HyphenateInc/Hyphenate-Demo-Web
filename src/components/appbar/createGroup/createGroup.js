@@ -5,7 +5,7 @@ import i18next from "i18next";
 import _ from 'lodash'
 import { Box, Checkbox, Button, ListItemAvatar, Avatar, ListItem, List, InputBase, Icon, InputLabel, Switch } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, fade } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux'
 import { message } from '@/components/common/Alert'
 import GroupActions from '@/redux/group'
@@ -123,7 +123,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 function CreateGroup(props) {
-    const { open, onClose, history, location } = props
+    const { open, onClose } = props
     const classes = useStyles();
     const dispatch = useDispatch()
     const roster = useSelector(state => state.roster) || {}

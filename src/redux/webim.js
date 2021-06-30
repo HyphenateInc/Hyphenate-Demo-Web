@@ -77,6 +77,13 @@ WebIM.conn.listen({
 
     onRecallMessage: message => {
         console.log('onRecallMessage', message)
+        // When log in, have received the Recall message before get Message from db. so retract after 2 seconds
+        if (!store.getState().message.byId[message.mid]) {
+            setTimeout(() => {
+                store.dispatch(MessageActions.deleteMessage(message))
+            }, 2000)
+            return
+        }
         store.dispatch(MessageActions.deleteMessage(message))
     },
     // The other has read the message
@@ -139,7 +146,7 @@ WebIM.conn.listen({
                 store.dispatch(MessageActions.clearUnread('groupChat', msg.gid))
                 store.dispatch(SessionActions.deleteSession(msg.gid))
                 break
-            case 'invite': //nvite you to group
+            case 'invite': //invite you to group
                 msg.status = ''
                 store.dispatch(NoticeActions.addGroupRequest(msg))
                 break

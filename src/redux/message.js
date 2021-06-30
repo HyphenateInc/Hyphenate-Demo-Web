@@ -334,7 +334,7 @@ export const updateMessageStatus = (state, { message, status = '' }) => {
 
 export const deleteMessage = (state, { msgId, to, chatType }) => {
     msgId = msgId.mid || msgId
-    const byId = state.getIn(['byId', msgId])
+    let byId = state.getIn(['byId', msgId])
     let sessionType, chatId
     if (!byId) {
         sessionType = chatType
@@ -343,6 +343,7 @@ export const deleteMessage = (state, { msgId, to, chatType }) => {
         sessionType = byId.chatType
         chatId = byId.chatId
     }
+
     let messages = state.getIn([sessionType, chatId]).asMutable()
     let targetMsg = _.find(messages, { id: msgId })
     const index = messages.indexOf(targetMsg)
@@ -356,6 +357,7 @@ export const deleteMessage = (state, { msgId, to, chatType }) => {
     state = state.setIn([sessionType, chatId], messages)
     AppDB.deleteMessage(msgId)
     return state
+
 }
 
 export const clearUnread = (state, { chatType, sessionId }) => {
@@ -367,8 +369,13 @@ export const clearUnread = (state, { chatType, sessionId }) => {
 export const fetchMessage = (state, { to, chatType, messages, offset }) => {
     let data = state[chatType] && state[chatType][to] ? state[chatType][to].asMutable() : []
     data = messages.concat(data)
-    //-----------------------
-    return state.setIn([chatType, to], data)
+    let historyById = {}
+    messages.forEach((item) => {
+        historyById[item.id] = { chatId: chatType === 'singleChat' ? item.from : item.to, chatType: item.chatType }
+    })
+    state = state.merge({ byId: historyById })
+    state = state.setIn([chatType, to], data)
+    return state
 }
 
 export const clearMessage = (state, { chatType, id }) => {
@@ -383,14 +390,16 @@ export const updateMessageMid = (state, { id, mid }) => {
     const byId = state.getIn(['byId', id])
     if (!_.isEmpty(byId)) {
         const { chatType, chatId } = byId
-        let messages = state.getIn([chatType, chatId]).asMutable()
+        let messages = state.getIn([chatType, chatId]).asMutable({ deep: true })
         let found = _.find(messages, { id: parseInt(id) })
-        let msg = found.setIn(['toJid'], mid)
-        messages.splice(messages.indexOf(found), 1, msg)
+        found.toJid = mid
+        found.mid = mid
+        // let msg = found.setIn(['toJid'], mid)
+        messages.splice(messages.indexOf(found), 1, found)
         state = state.setIn([chatType, chatId], messages)
     }
 
-    setTimeout(() => { AppDB.updateMessageMid(mid, Number(id)) }, 1000)
+    setTimeout(() => { AppDB.updateMessageMid(mid, Number(id)) }, 500)
     return state.setIn(['byMid', mid], { id })
 }
 

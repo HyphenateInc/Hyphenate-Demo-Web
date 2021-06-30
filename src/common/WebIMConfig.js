@@ -2,7 +2,7 @@ const config = {
     /*
      * Application AppKey
      */
-    appkey: 'easemob-demo#chatdemoui',
+    appkey: '1193210624041558#chatdemo',
     /*
      * Application Host
      */
@@ -14,9 +14,8 @@ const config = {
     https: true,
 
     /*
-    * 公有云配置默认为 true，
-    * 私有云配置请设置 isHttpDNS = false , 详细文档：http://docs-im.easemob.com/im/web/other/privatedeploy
-    */
+     * http://docs-im.easemob.com/im/web/other/privatedeploy
+     */
     isHttpDNS: true,
     /*
      * isMultiLoginSessions
