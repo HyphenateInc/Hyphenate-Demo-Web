@@ -1,7 +1,6 @@
 import React, { memo, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { Avatar, Menu, MenuItem } from '@material-ui/core';
-import agora from '@/assets/images/agora@2x.png'
 import i18next from "i18next";
 import { renderTime } from '@/utils';
 const useStyles = makeStyles((theme) => ({

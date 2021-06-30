@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => {
 
 export default function Setting({ open, onClose }) {
     const classes = useStyles();
+
     const handleClose = () => {
         onClose();
     };

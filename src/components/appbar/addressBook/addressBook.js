@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import CommonDialog from '@/components/common/dialog'
 import i18next from "i18next";
 import _ from 'lodash'
-import { Box, TextField, Button, ListItemAvatar, Avatar, ListItem, List } from '@material-ui/core';
+import { Box, ListItemAvatar, Avatar, ListItem, List } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux'
-import RosterActions from '@/redux/roster'
 import SessionActions from '@/redux/session'
-import { message } from '@/components/common/Alert'
 import groupIcon from '@/assets/images/group@2x.png'
 import chatRoomIcon from '@/assets/images/chatroom@2x.png'
 import GroupList from './groupList'
