@@ -35,7 +35,6 @@ function MessageList({ messageList }) {
     const classes = useStyles();
     const dispatch = useDispatch()
     const { to, chatType } = useParams()
-    console.log('** Render MessageList **')
     const scrollEl = useRef(null)
     const [isPullingDown, setIsPullingDown] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)

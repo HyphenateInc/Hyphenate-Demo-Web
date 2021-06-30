@@ -40,7 +40,7 @@ export default function Setting({ open, onClose }) {
                     </Grid>
                     <Grid item xs={12} className={classes.gridItem}>
                         <Typography variant="inherit" noWrap>
-                            sdk:{"3.5.2"}
+                            sdk:{"3.6.1"}
                         </Typography>
                     </Grid>
                 </Grid>

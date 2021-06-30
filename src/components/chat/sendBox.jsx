@@ -59,7 +59,6 @@ function SendBox() {
     const dispatch = useDispatch();
     const classes = useStyles();
     let { chatType, to } = useParams();
-    console.log('** Render SendBox **')
     const emojiRef = useRef(null)
     const fileEl = useRef(null)
     const [emojiVisible, setEmojiVisible] = useState(null)

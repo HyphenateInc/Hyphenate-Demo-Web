@@ -1,7 +1,7 @@
 /*
    root router
 */
-import { createHashHistory } from 'history'; // 如果是hash路由
+import { createHashHistory } from 'history';
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
 export const history = createHashHistory();
 const AuthorizedComponent = (props) => {

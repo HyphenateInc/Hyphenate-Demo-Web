@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: props => props.bySelf ? 'row-reverse' : 'row'
     },
     imgBox: {
-        marginLeft: '10px',
+        margin: '0 10px',
         maxWidth: '50%',
         '& img': {
             maxWidth: '100%'
