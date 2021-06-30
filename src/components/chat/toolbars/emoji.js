@@ -1,8 +1,7 @@
 import React, { memo, useEffect, lazy } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { emoji } from '@/common/emoji'
-import { Menu, MenuItem, IconButton, Button } from '@material-ui/core';
-import Popover from '@material-ui/core/Popover';
+import { Button, Popover } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => {
     return {

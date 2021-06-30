@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { IconButton, Icon, InputBase } from '@material-ui/core';
+import { IconButton, InputBase } from '@material-ui/core';
 import { makeStyles, fade } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => {
     return ({
@@ -67,4 +67,4 @@ function SearchInput() {
     )
 }
 
-export default SearchInput
+export default memo(SearchInput)
